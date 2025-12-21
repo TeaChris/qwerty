@@ -67,38 +67,29 @@ function ThemeToggle() {
   )
 }
 
-function NavLink({
-  to,
-  children,
-  icon,
-}: {
-  to: string
-  children: React.ReactNode
-  icon: React.ReactNode
-}) {
+function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
     <Link
       to={to}
-      className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
+      className="flex items-center justify-center p-3 rounded-lg text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
       activeProps={{
         className:
-          'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-accent-hover bg-accent/10 shadow-[inset_0_0_0_1px_rgba(99,102,241,0.2)]',
+          'flex items-center justify-center p-3 rounded-lg text-accent-hover bg-accent/10 shadow-[inset_0_0_0_1px_rgba(99,102,241,0.2)]',
       }}
     >
-      {icon}
-      <span className="max-md:hidden">{children}</span>
+      {children}
     </Link>
   )
 }
 
 function RootComponent() {
   return (
-    <div className="grid grid-cols-[15%_85%] max-md:grid-cols-[60px_1fr] h-screen w-full">
+    <div className="grid grid-cols-[8%_92%] max-md:grid-cols-[60px_1fr] h-screen w-full">
       {/* Sidebar */}
       <aside className="flex flex-col h-screen sticky top-0 overflow-y-auto bg-bg-secondary border-r border-border">
         {/* Logo */}
         <div className="p-6 max-md:p-4 max-md:flex max-md:justify-center border-b border-border">
-          <h1 className="text-xl font-bold tracking-tight bg-linear-to-br from-accent to-accent-hover bg-clip-text text-transparent max-md:hidden">
+          <h1 className="text-xl tracking-tight bg-linear-to-br from-accent to-accent-hover bg-clip-text text-transparent max-md:hidden font-extrabold">
             Performance
           </h1>
           <span className="hidden max-md:block text-xl font-bold text-accent">
@@ -108,59 +99,44 @@ function RootComponent() {
 
         {/* Navigation */}
         <nav className="flex-1 flex flex-col gap-1 py-4 px-3">
-          <NavLink
-            to="/"
-            icon={
-              <svg
-                className="w-5 h-5 shrink-0"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-            }
-          >
-            Dashboard
+          <NavLink to="/">
+            <svg
+              className="w-5 h-5 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
           </NavLink>
 
-          <NavLink
-            to="/analytics"
-            icon={
-              <svg
-                className="w-5 h-5 shrink-0"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <line x1="18" y1="20" x2="18" y2="10" />
-                <line x1="12" y1="20" x2="12" y2="4" />
-                <line x1="6" y1="20" x2="6" y2="14" />
-              </svg>
-            }
-          >
-            Analytics
+          <NavLink to="/analytics">
+            <svg
+              className="w-5 h-5 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
           </NavLink>
 
-          <NavLink
-            to="/settings"
-            icon={
-              <svg
-                className="w-5 h-5 shrink-0"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <circle cx="12" cy="12" r="3" />
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
-              </svg>
-            }
-          >
-            Settings
+          <NavLink to="/settings">
+            <svg
+              className="w-5 h-5 shrink-0"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
           </NavLink>
         </nav>
 
