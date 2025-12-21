@@ -16,14 +16,16 @@ function SettingsComponent() {
         </p>
       </header>
 
-      <div className="bg-bg-secondary border border-border rounded-xl p-6 hover:border-border-light hover:shadow-lg transition-all">
-        <h2 className="text-lg font-semibold text-text-primary mb-4">
-          Preferences
-        </h2>
-        <p className="text-text-secondary">
-          Application settings and configurations will be displayed here.
-        </p>
-      </div>
+      <section aria-label="Application preferences">
+        <article className="bg-bg-secondary border border-border rounded-xl p-6 hover:border-border-light hover:shadow-lg transition-all">
+          <h2 className="text-lg font-semibold text-text-primary mb-4">
+            Preferences
+          </h2>
+          <p className="text-text-secondary">
+            Application settings and configurations will be displayed here.
+          </p>
+        </article>
+      </section>
     </div>
   )
 }
