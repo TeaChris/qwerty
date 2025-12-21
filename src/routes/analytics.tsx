@@ -16,14 +16,16 @@ function AnalyticsComponent() {
         </p>
       </header>
 
-      <div className="bg-bg-secondary border border-border rounded-xl p-6 hover:border-border-light hover:shadow-lg transition-all">
-        <h2 className="text-lg font-semibold text-text-primary mb-4">
-          Traffic Overview
-        </h2>
-        <p className="text-text-secondary">
-          Detailed analytics and charts will be displayed here.
-        </p>
-      </div>
+      <section aria-label="Traffic overview">
+        <article className="bg-bg-secondary border border-border rounded-xl p-6 hover:border-border-light hover:shadow-lg transition-all">
+          <h2 className="text-lg font-semibold text-text-primary mb-4">
+            Traffic Overview
+          </h2>
+          <p className="text-text-secondary">
+            Detailed analytics and charts will be displayed here.
+          </p>
+        </article>
+      </section>
     </div>
   )
 }
