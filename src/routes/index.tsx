@@ -16,7 +16,10 @@ function StatCard({
   isPositive: boolean
 }) {
   return (
-    <div className="bg-bg-secondary border border-border rounded-xl p-6">
+    <article
+      className="bg-bg-secondary border border-border rounded-xl p-6"
+      aria-label={`${label}: ${value}, ${change}`}
+    >
       <p className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">
         {label}
       </p>
@@ -25,6 +28,7 @@ function StatCard({
       </p>
       <p
         className={`text-sm mt-2 flex items-center gap-1 ${isPositive ? 'text-success' : 'text-danger'}`}
+        aria-label={isPositive ? 'Positive trend' : 'Negative trend'}
       >
         <svg
           className="w-4 h-4"
@@ -32,6 +36,8 @@ function StatCard({
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
+          aria-hidden="true"
+          role="img"
         >
           {isPositive ? (
             <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
@@ -39,9 +45,9 @@ function StatCard({
             <polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
           )}
         </svg>
-        {change}
+        <span>{change}</span>
       </p>
-    </div>
+    </article>
   )
 }
 
@@ -59,32 +65,35 @@ function IndexComponent() {
       </header>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
-        <StatCard
-          label="Total Users"
-          value="24,521"
-          change="+12.5% from last month"
-          isPositive
-        />
-        <StatCard
-          label="Page Views"
-          value="1.2M"
-          change="+8.2% from last month"
-          isPositive
-        />
-        <StatCard
-          label="Bounce Rate"
-          value="32.1%"
-          change="+2.4% from last month"
-          isPositive={false}
-        />
-        <StatCard
-          label="Avg. Session"
-          value="4m 32s"
-          change="+18.7% from last month"
-          isPositive
-        />
-      </div>
+      <section aria-label="Performance statistics">
+        <h2 className="sr-only">Key Metrics</h2>
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
+          <StatCard
+            label="Total Users"
+            value="24,521"
+            change="+12.5% from last month"
+            isPositive
+          />
+          <StatCard
+            label="Page Views"
+            value="1.2M"
+            change="+8.2% from last month"
+            isPositive
+          />
+          <StatCard
+            label="Bounce Rate"
+            value="32.1%"
+            change="+2.4% from last month"
+            isPositive={false}
+          />
+          <StatCard
+            label="Avg. Session"
+            value="4m 32s"
+            change="+18.7% from last month"
+            isPositive
+          />
+        </div>
+      </section>
     </div>
   )
 }
