@@ -2,6 +2,16 @@
 
 /* ===== Theme Configuration (Tailwind v4.1) ===== */
 @theme {
+    /* Override Tailwind's default font-sans with Comfortaa */
+    --font-family-sans: 'Comfortaa', system-ui, sans-serif;
+
+    /* Font Weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
     /* Custom Colors */
     --color-bg-primary: var(--bg-primary);
     --color-bg-secondary: var(--bg-secondary);
@@ -82,11 +92,25 @@
         width: 100%;
     }
 
+    html {
+        font-family: 'Comfortaa', system-ui, sans-serif;
+    }
+
     body {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-family: inherit;
+        font-weight: 400;
         background-color: var(--bg-primary);
         color: var(--text-primary);
         -webkit-font-smoothing: antialiased;
+    }
+
+    /* Apply Comfortaa to all elements */
+    *,
+    button,
+    input,
+    select,
+    textarea {
+        font-family: 'Comfortaa', system-ui, sans-serif;
     }
 
     /* Scrollbar */
