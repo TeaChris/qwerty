@@ -138,17 +138,10 @@ function RootComponent() {
         </nav>
 
         {/* Footer */}
-        <div className="p-4 mt-auto border-t border-border">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-bg-hover transition-colors cursor-pointer">
-              <div className="w-8 h-8 rounded-full bg-linear-to-br from-accent to-accent-hover flex items-center justify-center text-xs font-semibold text-white">
-                U
-              </div>
-              <span className="text-sm font-medium text-text-primary max-md:hidden">
-                User
-              </span>
-            </div>
-            <ThemeToggle />
+        <div className="p-4 mt-auto border-t border-border flex flex-col items-center gap-3">
+          <ThemeToggle />
+          <div className="w-10 h-10 rounded-full bg-linear-to-br from-accent to-accent-hover flex items-center justify-center text-sm font-semibold text-white cursor-pointer hover:opacity-90 transition-opacity">
+            U
           </div>
         </div>
       </aside>
