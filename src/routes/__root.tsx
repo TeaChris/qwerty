@@ -74,7 +74,7 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
       className="flex items-center justify-center p-3 rounded-lg text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-all"
       activeProps={{
         className:
-          'flex items-center justify-center p-3 rounded-lg text-accent-hover bg-accent/10 shadow-[inset_0_0_0_1px_rgba(99,102,241,0.2)]',
+          'flex items-center justify-center p-4 rounded-lg text-accent-hover bg-accent/10 shadow-[inset_0_0_0_1px_rgba(99,102,241,0.2)]',
       }}
     >
       {children}
@@ -88,17 +88,14 @@ function RootComponent() {
       {/* Sidebar */}
       <aside className="flex flex-col h-screen sticky top-0 overflow-y-auto bg-bg-secondary border-r border-border">
         {/* Logo */}
-        <div className="p-6 max-md:p-4 max-md:flex max-md:justify-center border-b border-border">
-          <h1 className="text-xl tracking-tight bg-linear-to-br from-accent to-accent-hover bg-clip-text text-transparent max-md:hidden font-extrabold">
-            Performance
-          </h1>
-          <span className="hidden max-md:block text-xl font-bold text-accent">
-            P
-          </span>
+        <div className="p-4 flex justify-center border-b border-border">
+          <div className="w-12 h-12 bg-accent rounded-xl flex items-center justify-center">
+            <span className="text-2xl font-extrabold text-white">Q</span>
+          </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 flex flex-col gap-1 py-4 px-3">
+        <nav className="flex-1 flex flex-col items-center gap-4 py-4 px-3">
           <NavLink to="/">
             <svg
               className="w-5 h-5 shrink-0"
