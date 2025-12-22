@@ -1,10 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/')({
-  component: IndexComponent,
-})
-
-function StatCard({
+const StatCard = ({
   label,
   value,
   change,
@@ -14,7 +10,7 @@ function StatCard({
   value: string
   change: string
   isPositive: boolean
-}) {
+}) => {
   return (
     <article
       className="bg-bg-secondary border border-border rounded-xl p-6"
@@ -51,7 +47,7 @@ function StatCard({
   )
 }
 
-function IndexComponent() {
+const IndexComponent = () => {
   return (
     <div className="max-w-7xl mx-auto">
       {/* Header */}
@@ -97,3 +93,7 @@ function IndexComponent() {
     </div>
   )
 }
+
+export const Route = createFileRoute('/')({
+  component: IndexComponent,
+})
