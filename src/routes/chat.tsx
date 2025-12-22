@@ -15,19 +15,19 @@ export const Route = createFileRoute('/chat')({
 // Types
 interface Message {
   id: number
-  sender: string
   text: string
-  isMe: boolean
   time: string
+  isMe: boolean
+  sender: string
 }
 
 interface Friend {
   id: number
+  time: string
   name: string
-  status: 'online' | 'offline' | 'busy'
   avatar: string
   lastMessage: string
-  time: string
+  status: 'online' | 'offline' | 'busy'
 }
 
 // Dummy Data
@@ -166,6 +166,28 @@ function ChatComponent() {
   const search = Route.useSearch()
   const activeChatId = search.chatId
 
+  const getStatusColor = (status: Friend['status']) => {
+    switch (status) {
+      case 'online':
+        return 'text-success'
+      case 'busy':
+        return 'text-danger'
+      case 'offline':
+        return 'text-text-muted'
+    }
+  }
+
+  const getStatusDotColor = (status: Friend['status']) => {
+    switch (status) {
+      case 'online':
+        return 'bg-success'
+      case 'busy':
+        return 'bg-danger'
+      case 'offline':
+        return 'bg-gray-400'
+    }
+  }
+
   const [showRightPanel, setShowRightPanel] = useState<boolean>(true)
   const [message, setMessage] = useState<string>('')
 
@@ -252,14 +274,7 @@ function ChatComponent() {
                   {friend.avatar}
                 </div>
                 <span
-                  className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-bg-secondary
-                  ${
-                    friend.status === 'online'
-                      ? 'bg-success'
-                      : friend.status === 'busy'
-                        ? 'bg-danger'
-                        : 'bg-gray-400'
-                  }`}
+                  className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-bg-secondary ${getStatusDotColor(friend.status)}`}
                   role="status"
                   aria-label={friend.status}
                 />
@@ -305,9 +320,11 @@ function ChatComponent() {
               <h3 className="font-bold text-text-primary">
                 {selectedFriend.name}
               </h3>
-              <p className="text-xs text-success flex items-center gap-1">
+              <p
+                className={`text-xs flex items-center gap-1 ${getStatusColor(selectedFriend.status)}`}
+              >
                 <span
-                  className={`w-1.5 h-1.5 rounded-full ${selectedFriend.status === 'online' ? 'bg-success animate-pulse' : 'bg-gray-400'}`}
+                  className={`w-1.5 h-1.5 rounded-full ${getStatusDotColor(selectedFriend.status)} ${selectedFriend.status === 'online' ? 'animate-pulse' : ''}`}
                   aria-hidden="true"
                 />
                 <span className="capitalize">{selectedFriend.status}</span>
