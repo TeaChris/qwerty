@@ -1,10 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/analytics')({
-  component: AnalyticsComponent,
-})
-
-function AnalyticsComponent() {
+const AnalyticsComponent = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <header className="mb-8">
@@ -29,3 +25,7 @@ function AnalyticsComponent() {
     </div>
   )
 }
+
+export const Route = createFileRoute('/analytics')({
+  component: AnalyticsComponent,
+})
