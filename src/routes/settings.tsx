@@ -1,10 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/settings')({
-  component: SettingsComponent,
-})
-
-function SettingsComponent() {
+const SettingsComponent = () => {
   return (
     <div className="max-w-7xl mx-auto">
       <header className="mb-8">
@@ -29,3 +25,7 @@ function SettingsComponent() {
     </div>
   )
 }
+
+export const Route = createFileRoute('/settings')({
+  component: SettingsComponent,
+})
