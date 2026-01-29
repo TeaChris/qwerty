@@ -4,13 +4,3 @@ export interface ApiError {
       error?: unknown;
       headers?: Record<string, unknown>;
 }
-
-export interface IUser {
-      id: string;
-      username: string;
-      email: string;
-      role: 'ADMIN' | 'USER';
-      isVerified: boolean;
-      createdAt: string;
-      updatedAt: string;
-}

@@ -9,171 +9,104 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as AuthIndexRouteImport } from './routes/_auth.index'
-import { Route as AuthSettingsRouteImport } from './routes/_auth.settings'
-import { Route as AuthChatRouteImport } from './routes/_auth.chat'
-import { Route as AuthAnalyticsRouteImport } from './routes/_auth.analytics'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ChatRouteImport } from './routes/chat'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as IndexRouteImport } from './routes/index'
 
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/_auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthIndexRoute = AuthIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AuthSettingsRoute = AuthSettingsRouteImport.update({
+const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthChatRoute = AuthChatRouteImport.update({
+const ChatRoute = ChatRouteImport.update({
   id: '/chat',
   path: '/chat',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthAnalyticsRoute = AuthAnalyticsRouteImport.update({
+const AnalyticsRoute = AnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
-  getParentRoute: () => AuthRoute,
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/analytics': typeof AuthAnalyticsRoute
-  '/chat': typeof AuthChatRoute
-  '/settings': typeof AuthSettingsRoute
-  '/': typeof AuthIndexRoute
+  '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/chat': typeof ChatRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/analytics': typeof AuthAnalyticsRoute
-  '/chat': typeof AuthChatRoute
-  '/settings': typeof AuthSettingsRoute
-  '/': typeof AuthIndexRoute
+  '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/chat': typeof ChatRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_auth': typeof AuthRouteWithChildren
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/_auth/analytics': typeof AuthAnalyticsRoute
-  '/_auth/chat': typeof AuthChatRoute
-  '/_auth/settings': typeof AuthSettingsRoute
-  '/_auth/': typeof AuthIndexRoute
+  '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/chat': typeof ChatRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/login' | '/register' | '/analytics' | '/chat' | '/settings' | '/'
+  fullPaths: '/' | '/analytics' | '/chat' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/analytics' | '/chat' | '/settings' | '/'
-  id:
-    | '__root__'
-    | '/_auth'
-    | '/login'
-    | '/register'
-    | '/_auth/analytics'
-    | '/_auth/chat'
-    | '/_auth/settings'
-    | '/_auth/'
+  to: '/' | '/analytics' | '/chat' | '/settings'
+  id: '__root__' | '/' | '/analytics' | '/chat' | '/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AuthRoute: typeof AuthRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
+  IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  ChatRoute: typeof ChatRoute
+  SettingsRoute: typeof SettingsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth': {
-      id: '/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_auth/': {
-      id: '/_auth/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof AuthIndexRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/_auth/settings': {
-      id: '/_auth/settings'
+    '/settings': {
+      id: '/settings'
       path: '/settings'
       fullPath: '/settings'
-      preLoaderRoute: typeof AuthSettingsRouteImport
-      parentRoute: typeof AuthRoute
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_auth/chat': {
-      id: '/_auth/chat'
+    '/chat': {
+      id: '/chat'
       path: '/chat'
       fullPath: '/chat'
-      preLoaderRoute: typeof AuthChatRouteImport
-      parentRoute: typeof AuthRoute
+      preLoaderRoute: typeof ChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_auth/analytics': {
-      id: '/_auth/analytics'
+    '/analytics': {
+      id: '/analytics'
       path: '/analytics'
       fullPath: '/analytics'
-      preLoaderRoute: typeof AuthAnalyticsRouteImport
-      parentRoute: typeof AuthRoute
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface AuthRouteChildren {
-  AuthAnalyticsRoute: typeof AuthAnalyticsRoute
-  AuthChatRoute: typeof AuthChatRoute
-  AuthSettingsRoute: typeof AuthSettingsRoute
-  AuthIndexRoute: typeof AuthIndexRoute
-}
-
-const AuthRouteChildren: AuthRouteChildren = {
-  AuthAnalyticsRoute: AuthAnalyticsRoute,
-  AuthChatRoute: AuthChatRoute,
-  AuthSettingsRoute: AuthSettingsRoute,
-  AuthIndexRoute: AuthIndexRoute,
-}
-
-const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
-  AuthRoute: AuthRouteWithChildren,
-  LoginRoute: LoginRoute,
-  RegisterRoute: RegisterRoute,
+  IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  ChatRoute: ChatRoute,
+  SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
