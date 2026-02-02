@@ -9,6 +9,7 @@ interface UseAuthResult {
       isAuthenticated: boolean;
       isLoading: boolean;
       login: (email: string, password: string) => Promise<boolean>;
+      register: (username: string, email: string, password: string) => Promise<boolean>;
       logout: () => void;
 }
 
@@ -51,6 +52,33 @@ export function useAuth(): UseAuthResult {
             [setUser, setLoading]
       );
 
+      const register = useCallback(
+            async (username: string, email: string, password: string): Promise<boolean> => {
+                  setLoading(true);
+
+                  try {
+                        const { data, error } = await authService.register({ username, email, password });
+
+                        if (data) {
+                              setUser(data.user);
+                              toast.success('Registration successful! Welcome 🎉');
+                              return true;
+                        } else {
+                              const message = (error as { message?: string })?.message || 'Registration failed';
+                              toast.error(message);
+                              return false;
+                        }
+                  } catch (err) {
+                        console.error('Registration error:', err);
+                        toast.error('Something went wrong. Please try again.');
+                        return false;
+                  } finally {
+                        setLoading(false);
+                  }
+            },
+            [setUser, setLoading]
+      );
+
       const logout = useCallback(() => {
             authService.logout();
             storeLogout();
@@ -62,6 +90,7 @@ export function useAuth(): UseAuthResult {
             isAuthenticated,
             isLoading,
             login,
+            register,
             logout
       };
 }
