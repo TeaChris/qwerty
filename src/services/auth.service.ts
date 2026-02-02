@@ -1,6 +1,6 @@
 import { api } from '../lib/use.api';
 import { setAccessToken, clearAccessToken } from '../lib/utils';
-import type { LoginRequest, LoginResponse, User } from '../types/sale.types';
+import type { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, User } from '../types/sale.types';
 
 // Mock user for development
 const MOCK_USER: User = {
@@ -30,6 +30,30 @@ export const authService = {
             }
 
             const result = await api<LoginResponse>('/auth/login', credentials);
+            if (result.data?.token) {
+                  setAccessToken(result.data.token);
+            }
+            return result;
+      },
+
+      async register(data: RegisterRequest): Promise<{ data?: RegisterResponse; error?: unknown }> {
+            if (USE_MOCK) {
+                  await new Promise(resolve => setTimeout(resolve, 800));
+                  const token = `mock_reg_token_${Date.now()}`;
+                  setAccessToken(token);
+                  return {
+                        data: {
+                              token,
+                              user: {
+                                    id: `user_${Math.floor(Math.random() * 1000)}`,
+                                    email: data.email,
+                                    username: data.username
+                              }
+                        }
+                  };
+            }
+
+            const result = await api<RegisterResponse>('/auth/register', data);
             if (result.data?.token) {
                   setAccessToken(result.data.token);
             }
