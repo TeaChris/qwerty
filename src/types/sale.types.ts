@@ -57,9 +57,14 @@ export interface RegisterRequest extends Record<string, unknown> {
       username: string;
       email: string;
       password: string;
+      confirmPassword: string;
+      isTermsAndConditionAccepted: boolean;
 }
 
 export interface RegisterResponse {
-      token: string;
-      user: User;
+      status: string;
+      message: string;
+      data: {
+            user: User;
+      };
 }
