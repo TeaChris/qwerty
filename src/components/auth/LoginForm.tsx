@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../../hooks/useAuth';
+import { Link } from '@tanstack/react-router';
 
 const loginSchema = z.object({
       email: z.string().min(1, 'Email is required').email('Invalid email address'),
@@ -126,7 +127,9 @@ export function LoginForm() {
                   <div className="text-center pt-2">
                         <p className="text-sm text-slate-500">
                               Don't have an account?{' '}
-                              <button className="text-orange-500 font-bold hover:underline">Register for free</button>
+                              <Link to="/register" className="text-orange-500 font-bold hover:underline">
+                                    Register for free
+                              </Link>
                         </p>
                   </div>
 
