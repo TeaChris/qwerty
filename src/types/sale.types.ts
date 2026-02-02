@@ -52,3 +52,14 @@ export interface LoginResponse {
       token: string;
       user: User;
 }
+
+export interface RegisterRequest extends Record<string, unknown> {
+      username: string;
+      email: string;
+      password: string;
+}
+
+export interface RegisterResponse {
+      token: string;
+      user: User;
+}
