@@ -1,15 +1,31 @@
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useAuth } from '../../hooks/useAuth';
 
-export function LoginForm() {
-      const [email, setEmail] = useState('');
-      const [password, setPassword] = useState('');
-      const { login, isLoading } = useAuth();
+const loginSchema = z.object({
+      email: z.string().min(1, 'Email is required').email('Invalid email address'),
+      password: z.string().min(6, 'Password must be at least 6 characters')
+});
 
-      const handleSubmit = async (e: React.FormEvent) => {
-            e.preventDefault();
-            if (!email || !password) return;
-            await login(email, password);
+type LoginFormData = z.infer<typeof loginSchema>;
+
+export function LoginForm() {
+      const { login, isLoading } = useAuth();
+      const {
+            register,
+            handleSubmit,
+            formState: { errors }
+      } = useForm<LoginFormData>({
+            resolver: zodResolver(loginSchema),
+            defaultValues: {
+                  email: '',
+                  password: ''
+            }
+      });
+
+      const onSubmit = async (data: LoginFormData) => {
+            await login(data.email, data.password);
       };
 
       return (
@@ -19,7 +35,7 @@ export function LoginForm() {
                         <p className="text-slate-400 font-medium">Log in to participate in the flash sale</p>
                   </div>
 
-                  <form onSubmit={handleSubmit} className="space-y-6">
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <div className="space-y-2">
                               <label
                                     htmlFor="email"
@@ -30,12 +46,17 @@ export function LoginForm() {
                               <input
                                     id="email"
                                     type="email"
-                                    value={email}
-                                    onChange={e => setEmail(e.target.value)}
-                                    required
-                                    className="w-full px-5 py-4 bg-slate-800 border border-slate-700 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all"
+                                    {...register('email')}
+                                    className={`w-full px-5 py-4 bg-slate-800 border rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                                          errors.email
+                                                ? 'border-red-500/50 focus:ring-red-500/30'
+                                                : 'border-slate-700 focus:ring-orange-500/50 focus:border-orange-500'
+                                    }`}
                                     placeholder="you@example.com"
                               />
+                              {errors.email && (
+                                    <p className="text-xs font-bold text-red-400 ml-1 mt-1">{errors.email.message}</p>
+                              )}
                         </div>
 
                         <div className="space-y-2">
@@ -48,12 +69,19 @@ export function LoginForm() {
                               <input
                                     id="password"
                                     type="password"
-                                    value={password}
-                                    onChange={e => setPassword(e.target.value)}
-                                    required
-                                    className="w-full px-5 py-4 bg-slate-800 border border-slate-700 rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition-all"
+                                    {...register('password')}
+                                    className={`w-full px-5 py-4 bg-slate-800 border rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                                          errors.password
+                                                ? 'border-red-500/50 focus:ring-red-500/30'
+                                                : 'border-slate-700 focus:ring-orange-500/50 focus:border-orange-500'
+                                    }`}
                                     placeholder="••••••••"
                               />
+                              {errors.password && (
+                                    <p className="text-xs font-bold text-red-400 ml-1 mt-1">
+                                          {errors.password.message}
+                                    </p>
+                              )}
                         </div>
 
                         <button
