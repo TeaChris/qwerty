@@ -5,9 +5,9 @@ import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'a
 import { clearAccessToken, getAccessToken, isObject } from './utils';
 import type { ApiError } from '../types';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-if (!BASE_URL) throw new Error('add API_BASE_URL to your env file');
+if (!BASE_URL) throw new Error('add VITE_BASE_URL to your env file!!!');
 
 const apiClient: AxiosInstance = axios.create({
       baseURL: BASE_URL,
