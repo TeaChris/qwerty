@@ -6,10 +6,24 @@ import { Link } from '@tanstack/react-router';
 
 const registerSchema = z
       .object({
-            username: z.string().min(3, 'Username must be at least 3 characters'),
+            username: z
+                  .string()
+                  .min(3, 'Username must be at least 3 characters long')
+                  .max(15, 'Username must be at most 15 characters long')
+                  .regex(/^[a-zA-Z0-9_]+$/, {
+                        message: 'Username must contain only letters, numbers and underscores'
+                  }),
             email: z.string().min(1, 'Email is required').email('Invalid email address'),
-            password: z.string().min(6, 'Password must be at least 6 characters'),
-            confirmPassword: z.string().min(1, 'Please confirm your password')
+            password: z
+                  .string()
+                  .min(8, 'Password must be at least 8 characters long')
+                  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, {
+                        message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character'
+                  }),
+            confirmPassword: z.string().min(8, 'Confirm password must be at least 8 characters long'),
+            isTermsAndConditionAccepted: z
+                  .boolean()
+                  .refine(val => val === true, 'You must accept the terms to continue')
       })
       .refine(data => data.password === data.confirmPassword, {
             message: "Passwords don't match",
@@ -30,19 +44,20 @@ export function RegisterForm() {
                   username: '',
                   email: '',
                   password: '',
-                  confirmPassword: ''
+                  confirmPassword: '',
+                  isTermsAndConditionAccepted: false
             }
       });
 
       const onSubmit = async (data: RegisterFormData) => {
-            await signup(data.username, data.email, data.password);
+            await signup(data);
       };
 
       return (
             <div className="w-full max-w-md mx-auto space-y-8 p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl animate-in fade-in zoom-in duration-500">
                   <div className="text-center space-y-2">
                         <h1 className="text-3xl font-extrabold text-white tracking-tight">Create Account</h1>
-                        <p className="text-slate-400 font-medium">Sign up to join the next flash sale</p>
+                        <p className="text-slate-400 font-medium tracking-tight">Sign up to join the next flash sale</p>
                   </div>
 
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -62,7 +77,7 @@ export function RegisterForm() {
                                                 ? 'border-red-500/50 focus:ring-red-500/30'
                                                 : 'border-slate-700 focus:ring-orange-500/50 focus:border-orange-500'
                                     }`}
-                                    placeholder="johndoe"
+                                    placeholder="Username"
                               />
                               {errors.username && (
                                     <p className="text-xs font-bold text-red-400 ml-1 mt-1">
@@ -94,52 +109,98 @@ export function RegisterForm() {
                               )}
                         </div>
 
-                        <div className="space-y-2">
-                              <label
-                                    htmlFor="password"
-                                    className="text-sm font-bold text-slate-400 uppercase tracking-widest ml-1"
-                              >
-                                    Password
-                              </label>
-                              <input
-                                    id="password"
-                                    type="password"
-                                    {...register('password')}
-                                    className={`w-full px-5 py-4 bg-slate-800 border rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
-                                          errors.password
-                                                ? 'border-red-500/50 focus:ring-red-500/30'
-                                                : 'border-slate-700 focus:ring-orange-500/50 focus:border-orange-500'
-                                    }`}
-                                    placeholder="••••••••"
-                              />
-                              {errors.password && (
-                                    <p className="text-xs font-bold text-red-400 ml-1 mt-1">
-                                          {errors.password.message}
-                                    </p>
-                              )}
-                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                    <label
+                                          htmlFor="password"
+                                          className="text-sm font-bold text-slate-400 uppercase tracking-widest ml-1"
+                                    >
+                                          Password
+                                    </label>
+                                    <input
+                                          id="password"
+                                          type="password"
+                                          {...register('password')}
+                                          className={`w-full px-5 py-4 bg-slate-800 border rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                                                errors.password
+                                                      ? 'border-red-500/50 focus:ring-red-500/30'
+                                                      : 'border-slate-700 focus:ring-orange-500/50 focus:border-orange-500'
+                                          }`}
+                                          placeholder="••••••••"
+                                    />
+                                    {errors.password && (
+                                          <p className="text-xs font-bold text-red-400 ml-1 mt-1 leading-tight">
+                                                {errors.password.message}
+                                          </p>
+                                    )}
+                              </div>
 
-                        <div className="space-y-2">
+                              <div className="space-y-2">
+                                    <label
+                                          htmlFor="confirmPassword"
+                                          className="text-sm font-bold text-slate-400 uppercase tracking-widest ml-1"
+                                    >
+                                          Confirm
+                                    </label>
+                                    <input
+                                          id="confirmPassword"
+                                          type="password"
+                                          {...register('confirmPassword')}
+                                          className={`w-full px-5 py-4 bg-slate-800 border rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                                                errors.confirmPassword
+                                                      ? 'border-red-500/50 focus:ring-red-500/30'
+                                                      : 'border-slate-700 focus:ring-orange-500/50 focus:border-orange-500'
+                                          }`}
+                                          placeholder="••••••••"
+                                    />
+                              </div>
+                        </div>
+                        {errors.confirmPassword && (
+                              <p className="text-xs font-bold text-red-400 ml-1 -mt-4">
+                                    {errors.confirmPassword.message}
+                              </p>
+                        )}
+
+                        <div className="space-y-2 group">
                               <label
-                                    htmlFor="confirmPassword"
-                                    className="text-sm font-bold text-slate-400 uppercase tracking-widest ml-1"
-                              >
-                                    Confirm Password
-                              </label>
-                              <input
-                                    id="confirmPassword"
-                                    type="password"
-                                    {...register('confirmPassword')}
-                                    className={`w-full px-5 py-4 bg-slate-800 border rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
-                                          errors.confirmPassword
-                                                ? 'border-red-500/50 focus:ring-red-500/30'
-                                                : 'border-slate-700 focus:ring-orange-500/50 focus:border-orange-500'
+                                    className={`flex items-start gap-3 cursor-pointer p-4 rounded-2xl bg-slate-800/50 border transition-all hover:bg-slate-800 ${
+                                          errors.isTermsAndConditionAccepted
+                                                ? 'border-red-500/30 bg-red-500/5'
+                                                : 'border-slate-700'
                                     }`}
-                                    placeholder="••••••••"
-                              />
-                              {errors.confirmPassword && (
+                              >
+                                    <div className="relative flex items-center mt-0.5">
+                                          <input
+                                                id="isTermsAndConditionAccepted"
+                                                type="checkbox"
+                                                {...register('isTermsAndConditionAccepted')}
+                                                className="peer shrink-0 appearance-none w-5 h-5 border-2 border-slate-600 rounded-lg bg-transparent checked:bg-orange-500 checked:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:ring-offset-2 focus:ring-offset-slate-900 transition-all cursor-pointer"
+                                          />
+                                          <svg
+                                                className="absolute w-3.5 h-3.5 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="4"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                          >
+                                                <polyline points="20 6 9 17 4 12" />
+                                          </svg>
+                                    </div>
+                                    <div className="space-y-1">
+                                          <span className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors">
+                                                I accept the Terms and Conditions
+                                          </span>
+                                          <p className="text-[11px] font-medium text-slate-500 leading-normal">
+                                                By ticking this box, you agree to our Terms of Service and Privacy
+                                                Policy.
+                                          </p>
+                                    </div>
+                              </label>
+                              {errors.isTermsAndConditionAccepted && (
                                     <p className="text-xs font-bold text-red-400 ml-1 mt-1">
-                                          {errors.confirmPassword.message}
+                                          {errors.isTermsAndConditionAccepted.message}
                                     </p>
                               )}
                         </div>
@@ -152,8 +213,8 @@ export function RegisterForm() {
             transition-all duration-300 transform active:scale-[0.98]
             ${
                   isLoading
-                        ? 'bg-slate-700 cursor-not-allowed'
-                        : 'bg-linear-to-r from-orange-500 to-red-600 hover:shadow-lg hover:shadow-orange-500/20'
+                        ? 'bg-slate-700 cursor-not-allowed shadow-none'
+                        : 'bg-linear-to-r from-orange-500 to-red-600 hover:shadow-lg hover:shadow-orange-500/30 hover:-translate-y-0.5'
             }
           `}
                         >
@@ -186,15 +247,18 @@ export function RegisterForm() {
                   <div className="text-center pt-2">
                         <p className="text-sm text-slate-500">
                               Already have an account?{' '}
-                              <Link to="/login" className="text-orange-500 font-bold hover:underline">
+                              <Link
+                                    to="/login"
+                                    className="text-orange-500 font-bold hover:underline transition-all active:opacity-70"
+                              >
                                     Log in here
                               </Link>
                         </p>
                   </div>
 
-                  <div className="pt-4 flex items-center gap-4 text-slate-700">
+                  <div className="pt-4 flex items-center gap-4 text-slate-800">
                         <div className="grow h-px bg-slate-800"></div>
-                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] whitespace-nowrap">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] whitespace-nowrap opacity-50">
                               Secure Registration
                         </span>
                         <div className="grow h-px bg-slate-800"></div>
