@@ -2,14 +2,14 @@ import { useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useAuthStore } from '../stores/auth.store';
 import { authService } from '../services/auth.service';
-import type { User } from '../types/sale.types';
+import type { User, RegisterRequest } from '../types/sale.types';
 
 interface UseAuthResult {
       user: User | null;
       isAuthenticated: boolean;
       isLoading: boolean;
       login: (email: string, password: string) => Promise<boolean>;
-      register: (username: string, email: string, password: string) => Promise<boolean>;
+      register: (data: RegisterRequest) => Promise<boolean>;
       logout: () => void;
 }
 
@@ -53,14 +53,14 @@ export function useAuth(): UseAuthResult {
       );
 
       const register = useCallback(
-            async (username: string, email: string, password: string): Promise<boolean> => {
+            async (formData: RegisterRequest): Promise<boolean> => {
                   setLoading(true);
 
                   try {
-                        const { data, error } = await authService.register({ username, email, password });
+                        const { data, error } = await authService.register(formData);
 
                         if (data) {
-                              setUser(data.user);
+                              setUser(data.data.user);
                               toast.success('Registration successful! Welcome 🎉');
                               return true;
                         } else {
