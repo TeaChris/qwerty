@@ -18,12 +18,24 @@ export function useAuth(): UseAuthResult {
 
       // Check for existing session on mount
       useEffect(() => {
-            if (authService.isAuthenticated() && !user) {
-                  // In a real app, you'd validate the token with the server
-                  // For now, we'll just set authenticated state
-                  // The user info would come from a /auth/me endpoint
-            }
-      }, [user]);
+            const restoreSession = async () => {
+                  if (!user) {
+                        setLoading(true);
+                        try {
+                              const { data } = await authService.getMe();
+                              if (data?.data?.user) {
+                                    setUser(data.data.user);
+                              }
+                        } catch (_err) {
+                              // Session might not exist or be expired, ignore silently
+                        } finally {
+                              setLoading(false);
+                        }
+                  }
+            };
+
+            restoreSession();
+      }, [user, setUser, setLoading]);
 
       const login = useCallback(
             async (email: string, password: string): Promise<boolean> => {
@@ -32,8 +44,8 @@ export function useAuth(): UseAuthResult {
                   try {
                         const { data, error } = await authService.login({ email, password });
 
-                        if (data) {
-                              setUser(data.user);
+                        if (data?.data?.user) {
+                              setUser(data.data.user);
                               toast.success('Login successful! 🎉');
                               return true;
                         } else {
@@ -41,8 +53,8 @@ export function useAuth(): UseAuthResult {
                               toast.error(message);
                               return false;
                         }
-                  } catch (err) {
-                        console.error('Login error:', err);
+                  } catch (_err) {
+                        console.error('Login error:', _err);
                         toast.error('Something went wrong. Please try again.');
                         return false;
                   } finally {
@@ -59,7 +71,7 @@ export function useAuth(): UseAuthResult {
                   try {
                         const { data, error } = await authService.register(formData);
 
-                        if (data) {
+                        if (data?.data?.user) {
                               setUser(data.data.user);
                               toast.success('Registration successful! Welcome 🎉');
                               return true;
@@ -68,8 +80,8 @@ export function useAuth(): UseAuthResult {
                               toast.error(message);
                               return false;
                         }
-                  } catch (err) {
-                        console.error('Registration error:', err);
+                  } catch (_err) {
+                        console.error('Registration error:', _err);
                         toast.error('Something went wrong. Please try again.');
                         return false;
                   } finally {
