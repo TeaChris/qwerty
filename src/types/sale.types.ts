@@ -49,8 +49,18 @@ export interface LoginRequest extends Record<string, unknown> {
 }
 
 export interface LoginResponse {
-      token: string;
-      user: User;
+      status: string;
+      message: string;
+      data: {
+            user: User;
+      };
+}
+
+export interface MeResponse {
+      status: string;
+      data: {
+            user: User;
+      };
 }
 
 export interface RegisterRequest extends Record<string, unknown> {
