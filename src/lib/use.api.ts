@@ -12,6 +12,7 @@ if (!BASE_URL) throw new Error('add VITE_BASE_URL to your env file!!!');
 const apiClient: AxiosInstance = axios.create({
       baseURL: BASE_URL,
       timeout: 10000,
+      withCredentials: true,
       headers: {
             'Content-Type': 'application/json'
       }
