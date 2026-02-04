@@ -19,7 +19,7 @@ export function useAuth(): UseAuthResult {
       // Check for existing session on mount
       useEffect(() => {
             const restoreSession = async () => {
-                  if (!user) {
+                  if (!user && sessionStorage.getItem('access_token')) {
                         setLoading(true);
                         try {
                               const { data } = await authService.getMe();
@@ -27,7 +27,7 @@ export function useAuth(): UseAuthResult {
                                     setUser(data.data.user);
                               }
                         } catch (_err) {
-                              // Session might not exist or be expired, ignore silently
+                              console.error('Session restoration failed:', _err);
                         } finally {
                               setLoading(false);
                         }
