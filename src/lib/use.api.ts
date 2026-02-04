@@ -80,11 +80,15 @@ export const api = async <T>(
                   };
 
                   switch (status) {
-                        case 401:
-                              toast.error('log in again');
-                              clearAccessToken();
-                              window.location.href = '/login';
+                        case 401: {
+                              const currentPath = window.location.pathname;
+                              if (currentPath !== '/login' && currentPath !== '/register') {
+                                    toast.error('log in again');
+                                    clearAccessToken();
+                                    window.location.href = '/login';
+                              }
                               break;
+                        }
                         case 429:
                               toast.error('Too many requests. Please slow down.');
                               break;
