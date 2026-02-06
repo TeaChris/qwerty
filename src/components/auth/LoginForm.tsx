@@ -90,7 +90,7 @@ export function LoginForm() {
                               disabled={isLoading}
                               className={`
             w-full py-4 px-6 rounded-2xl font-bold text-white tracking-wide
-            transition-all duration-300 transform active:scale-[0.98]
+            transition-all duration-300 transform active:scale-[0.98] cursor-pointer
             ${
                   isLoading
                         ? 'bg-slate-700 cursor-not-allowed'
