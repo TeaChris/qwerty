@@ -2,24 +2,38 @@ import { useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useAuthStore } from '../stores/auth.store';
 import { authService } from '../services/auth.service';
+import { setAccessToken, getAccessToken } from '../lib/utils';
 import type { User, RegisterRequest } from '../types/sale.types';
 
 interface UseAuthResult {
       user: User | null;
-      isAuthenticated: boolean;
-      isLoading: boolean;
-      login: (email: string, password: string) => Promise<boolean>;
-      register: (data: RegisterRequest) => Promise<boolean>;
       logout: () => void;
+      isLoading: boolean;
+      isInitialized: boolean;
+      isAuthenticated: boolean;
+      register: (data: RegisterRequest) => Promise<boolean>;
+      login: (email: string, password: string) => Promise<boolean>;
 }
 
 export function useAuth(): UseAuthResult {
-      const { user, isAuthenticated, isLoading, setUser, setLoading, logout: storeLogout } = useAuthStore();
+      const {
+            user,
+            setUser,
+            isLoading,
+            setLoading,
+            isInitialized,
+            setInitialized,
+            isAuthenticated,
+            logout: storeLogout
+      } = useAuthStore();
 
       // Check for existing session on mount
       useEffect(() => {
             const restoreSession = async () => {
-                  if (!user && sessionStorage.getItem('access_token')) {
+                  if (isInitialized) return;
+
+                  const token = getAccessToken();
+                  if (!user && token) {
                         setLoading(true);
                         try {
                               const { data } = await authService.getMe();
@@ -30,12 +44,15 @@ export function useAuth(): UseAuthResult {
                               console.error('Session restoration failed:', _err);
                         } finally {
                               setLoading(false);
+                              setInitialized(true);
                         }
+                  } else {
+                        setInitialized(true);
                   }
             };
 
             restoreSession();
-      }, [user, setUser, setLoading]);
+      }, [user, setUser, setLoading, isInitialized, setInitialized]);
 
       const login = useCallback(
             async (email: string, password: string): Promise<boolean> => {
@@ -45,7 +62,11 @@ export function useAuth(): UseAuthResult {
                         const { data, error } = await authService.login({ email, password });
 
                         if (data?.data?.user) {
+                              if (data.data.accessToken) {
+                                    setAccessToken(data.data.accessToken);
+                              }
                               setUser(data.data.user);
+                              setInitialized(true);
                               toast.success('Login successful! 🎉');
                               return true;
                         } else {
@@ -61,7 +82,7 @@ export function useAuth(): UseAuthResult {
                         setLoading(false);
                   }
             },
-            [setUser, setLoading]
+            [setUser, setLoading, setInitialized]
       );
 
       const register = useCallback(
@@ -98,10 +119,11 @@ export function useAuth(): UseAuthResult {
 
       return {
             user,
-            isAuthenticated,
-            isLoading,
             login,
+            logout,
             register,
-            logout
+            isLoading,
+            isInitialized,
+            isAuthenticated
       };
 }
