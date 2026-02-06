@@ -4,10 +4,12 @@ import type { User } from '../types/sale.types';
 
 interface AuthState {
       user: User | null;
-      isAuthenticated: boolean;
       isLoading: boolean;
+      isInitialized: boolean;
+      isAuthenticated: boolean;
 
       // Actions
+      setInitialized: (val: boolean) => void;
       setUser: (user: User | null) => void;
       setLoading: (val: boolean) => void;
       logout: () => void;
@@ -17,6 +19,7 @@ export const useAuthStore = create<AuthState>(set => ({
       user: null,
       isAuthenticated: false,
       isLoading: false,
+      isInitialized: false,
 
       setUser: user =>
             set({
@@ -26,8 +29,10 @@ export const useAuthStore = create<AuthState>(set => ({
 
       setLoading: val => set({ isLoading: val }),
 
+      setInitialized: val => set({ isInitialized: val }),
+
       logout: () => {
             clearAccessToken();
-            set({ user: null, isAuthenticated: false });
+            set({ user: null, isAuthenticated: false, isInitialized: true });
       }
 }));
