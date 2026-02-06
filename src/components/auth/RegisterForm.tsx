@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../../hooks/useAuth';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 
 const registerSchema = z
       .object({
@@ -34,6 +34,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
       const { register: signup, isLoading } = useAuth();
+      const navigate = useNavigate();
       const {
             register,
             handleSubmit,
@@ -50,7 +51,10 @@ export function RegisterForm() {
       });
 
       const onSubmit = async (data: RegisterFormData) => {
-            await signup(data);
+            const success = await signup(data);
+            if (success) {
+                  navigate({ to: '/check-email' });
+            }
       };
 
       return (
