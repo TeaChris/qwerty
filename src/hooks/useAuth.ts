@@ -49,7 +49,7 @@ export function useAuth(): UseAuthResult {
                               toast.success('Login successful! 🎉');
                               return true;
                         } else {
-                              const message = (error as { message?: string })?.message || 'Login failed';
+                              const message = error?.message || 'Login failed';
                               toast.error(message);
                               return false;
                         }
@@ -71,12 +71,11 @@ export function useAuth(): UseAuthResult {
                   try {
                         const { data, error } = await authService.register(formData);
 
-                        if (data?.data?.user) {
-                              setUser(data.data.user);
-                              toast.success('Registration successful! Welcome 🎉');
+                        if (data?.status === 'success') {
+                              toast.success(data.message || 'Registration successful! Please verify your email.');
                               return true;
                         } else {
-                              const message = (error as { message?: string })?.message || 'Registration failed';
+                              const message = error?.message || 'Registration failed';
                               toast.error(message);
                               return false;
                         }
@@ -88,7 +87,7 @@ export function useAuth(): UseAuthResult {
                         setLoading(false);
                   }
             },
-            [setUser, setLoading]
+            [setLoading]
       );
 
       const logout = useCallback(() => {
