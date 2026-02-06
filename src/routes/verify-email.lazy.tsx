@@ -1,5 +1,5 @@
 import { createLazyFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { toast } from 'sonner';
 import { Loader2, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
 import { authService } from '../services/auth.service';
@@ -9,18 +9,23 @@ export const Route = createLazyFileRoute('/verify-email')({
 });
 
 function VerifyEmailComponent() {
-      const { token } = useSearch({ from: '/verify-email' }) as { token?: string };
       const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
+      const { token } = useSearch({ from: '/verify-email' }) as { token?: string };
       const [message, setMessage] = useState('Verifying your account...');
       const navigate = useNavigate();
 
+      const hasAttempted = useRef(false);
+
       useEffect(() => {
             const verify = async () => {
+                  if (hasAttempted.current) return;
                   if (!token) {
                         setStatus('error');
                         setMessage('Verification token is missing.');
                         return;
                   }
+
+                  hasAttempted.current = true;
 
                   try {
                         const { data, error } = await authService.verifyEmail(token);
