@@ -1,5 +1,3 @@
-const ACCESS_TOKEN_KEY = 'access_token';
-
 const isObject = (value: unknown): value is Record<string, unknown> => {
       const isArray = Array.isArray(value);
       const isFormData = value instanceof FormData;
@@ -8,16 +6,7 @@ const isObject = (value: unknown): value is Record<string, unknown> => {
       return !isArray && !isFormData && isObject;
 };
 
-const setAccessToken = (token: string | null) => {
-      if (token) {
-            sessionStorage.setItem(ACCESS_TOKEN_KEY, token);
-      } else {
-            sessionStorage.removeItem(ACCESS_TOKEN_KEY);
-      }
-};
+// No-op for backwards compatibility - tokens are managed via HTTP-only cookies
+const clearAccessToken = () => {};
 
-const getAccessToken = () => sessionStorage.getItem(ACCESS_TOKEN_KEY);
-
-const clearAccessToken = () => sessionStorage.removeItem(ACCESS_TOKEN_KEY);
-
-export { isObject, setAccessToken, getAccessToken, clearAccessToken };
+export { isObject, clearAccessToken };
