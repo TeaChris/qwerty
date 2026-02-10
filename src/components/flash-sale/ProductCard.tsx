@@ -24,7 +24,9 @@ export function ProductCard({ status, timeRemaining, timeUntilStart, isPurchasin
                   <div className="relative h-72 md:h-80 overflow-hidden">
                         <img
                               src={status.productImage}
-                              alt={status.productName}
+                              alt={`${status.productName} - Flash sale product image`}
+                              loading="lazy"
+                              decoding="async"
                               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                               onError={e => {
                                     (e.target as HTMLImageElement).src =
