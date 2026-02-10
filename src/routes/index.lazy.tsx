@@ -7,10 +7,11 @@ export const Route = createLazyFileRoute('/')({
 });
 
 function IndexComponent() {
-      const { isAuthenticated } = useAuth();
+      const { isAuthenticated, isInitialized } = useAuth();
 
+      // Root component handles loading state, so we're guaranteed to be initialized here
       // Protect the route - redirect to login if not authenticated
-      if (!isAuthenticated) {
+      if (isInitialized && !isAuthenticated) {
             return <Navigate to="/login" />;
       }
 
