@@ -1,5 +1,5 @@
 import { api } from '../lib/use.api';
-import { getAccessToken, clearAccessToken } from '../lib/utils';
+import { clearAccessToken } from '../lib/utils';
 import type { LoginRequest, LoginResponse, RegisterRequest, RegisterResponse, MeResponse } from '../types/sale.types';
 import type { ApiError } from '../types';
 
@@ -32,9 +32,5 @@ export const authService = {
             } finally {
                   clearAccessToken();
             }
-      },
-
-      isAuthenticated(): boolean {
-            return !!getAccessToken();
       }
 };
