@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
-import { clearAccessToken, getAccessToken, isObject } from './utils';
+import { clearAccessToken, isObject } from './utils';
 import type { ApiError } from '../types';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -18,11 +18,8 @@ const apiClient: AxiosInstance = axios.create({
       }
 });
 
+// Request interceptor - cookies are sent automatically via withCredentials
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-      const token = getAccessToken();
-      if (token && config.headers) {
-            config.headers.Authorization = `Bearer ${token}`;
-      }
       return config;
 });
 
