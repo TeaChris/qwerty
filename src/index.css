@@ -2,8 +2,11 @@
 
 /* ===== Theme Configuration (Tailwind v4.1) ===== */
 @theme {
-    /* Override Tailwind's default font-sans with Comfortaa */
-    --font-family-sans: 'Comfortaa', system-ui, sans-serif;
+    /* Distinctive Typography - Body Font */
+    --font-family-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+
+    /* Display/Heading Font */
+    --font-family-display: 'Space Grotesk', 'DM Sans', system-ui, sans-serif;
 
     /* Font Weights */
     --font-weight-light: 300;
@@ -95,7 +98,7 @@
     }
 
     html {
-        font-family: 'Comfortaa', system-ui, sans-serif;
+        font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
     }
 
     body {
@@ -104,15 +107,27 @@
         color: var(--text-primary);
         background-color: var(--bg-primary);
         -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Apply Comfortaa to all elements */
+    /* Apply DM Sans to all elements */
     *,
     button,
     input,
     select,
     textarea {
-        font-family: 'Comfortaa', system-ui, sans-serif;
+        font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Headings use display font */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: 'Space Grotesk', 'DM Sans', system-ui, sans-serif;
+        letter-spacing: -0.02em;
     }
 
     /* Focus visible styles for accessibility */
@@ -157,34 +172,82 @@
     .custom-scrollbar::-webkit-scrollbar {
         width: 6px;
     }
-    
+
     .custom-scrollbar::-webkit-scrollbar-track {
         background: #0f172a;
     }
-    
+
     .custom-scrollbar::-webkit-scrollbar-thumb {
         background: #1e293b;
         border-radius: 10px;
     }
-    
+
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #334155;
     }
 }
 
+/* ===== Enhanced Design Tokens ===== */
+
+/* Noise texture for visual depth */
+@supports (background: paint(random)) {
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.03;
+        z-index: -1;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' /%3E%3C/svg%3E");
+    }
+}
+
 /* Flash Sale Animations */
 @keyframes pulse-subtle {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 @keyframes pulse-glow {
-    0%, 100% { opacity: 0.5; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.05); }
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
 }
 
 @keyframes shimmer {
-    100% { transform: translateX(100%); }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .animate-pulse-subtle {
@@ -193,6 +256,10 @@
 
 .animate-pulse-glow {
     animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Reduced motion for accessibility */
