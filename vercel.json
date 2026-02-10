@@ -2,7 +2,18 @@
       "rewrites": [
             {
                   "source": "/api/v1/:path*",
-                  "destination": "https://your-backend-app.onrender.com/api/v1/:path*"
+                  "destination": "https://perf-be.onrender.com/api/v1/:path*"
+            }
+      ],
+      "headers": [
+            {
+                  "source": "/api/v1/:path*",
+                  "headers": [
+                        {
+                              "key": "Cache-Control",
+                              "value": "no-store, must-revalidate"
+                        }
+                  ]
             }
       ]
 }
