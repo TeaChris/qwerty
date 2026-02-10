@@ -2,7 +2,6 @@ import { useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useAuthStore } from '../stores/auth.store';
 import { authService } from '../services/auth.service';
-import { setAccessToken, getAccessToken } from '../lib/utils';
 import type { User, RegisterRequest } from '../types/sale.types';
 
 interface UseAuthResult {
@@ -27,32 +26,28 @@ export function useAuth(): UseAuthResult {
             logout: storeLogout
       } = useAuthStore();
 
-      // Check for existing session on mount
+      // Check for existing session on mount - relies on HTTP-only cookies
       useEffect(() => {
             const restoreSession = async () => {
                   if (isInitialized) return;
 
-                  const token = getAccessToken();
-                  if (!user && token) {
+                  try {
                         setLoading(true);
-                        try {
-                              const { data } = await authService.getMe();
-                              if (data?.data?.user) {
-                                    setUser(data.data.user);
-                              }
-                        } catch (_err) {
-                              console.error('Session restoration failed:', _err);
-                        } finally {
-                              setLoading(false);
-                              setInitialized(true);
+                        const { data } = await authService.getMe();
+                        if (data?.data?.user) {
+                              setUser(data.data.user);
                         }
-                  } else {
+                  } catch (_err) {
+                        // No valid session - user needs to log in
+                        console.error('Session restoration failed:', _err);
+                  } finally {
+                        setLoading(false);
                         setInitialized(true);
                   }
             };
 
             restoreSession();
-      }, [user, setUser, setLoading, isInitialized, setInitialized]);
+      }, [isInitialized, setUser, setLoading, setInitialized]);
 
       const login = useCallback(
             async (email: string, password: string): Promise<boolean> => {
@@ -62,9 +57,6 @@ export function useAuth(): UseAuthResult {
                         const { data, error } = await authService.login({ email, password });
 
                         if (data?.data?.user) {
-                              if (data.data.accessToken) {
-                                    setAccessToken(data.data.accessToken);
-                              }
                               setUser(data.data.user);
                               setInitialized(true);
                               toast.success('Login successful! 🎉');
