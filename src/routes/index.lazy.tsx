@@ -1,6 +1,8 @@
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
 import { FlashSaleDashboard } from '../components/flash-sale';
 import { useAuth } from '../hooks';
+import { UserDropdown, LiveBadge } from '../components';
+import { useAuthStore } from '../stores/auth.store';
 
 export const Route = createLazyFileRoute('/')({
       component: IndexComponent
@@ -8,6 +10,7 @@ export const Route = createLazyFileRoute('/')({
 
 function IndexComponent() {
       const { isAuthenticated, isInitialized } = useAuth();
+      const { user } = useAuthStore();
 
       // Root component handles loading state, so we're guaranteed to be initialized here
       // Protect the route - redirect to login if not authenticated
@@ -16,54 +19,139 @@ function IndexComponent() {
       }
 
       return (
-            <div className="min-h-screen bg-slate-950 text-slate-200 selection:bg-orange-500/30">
-                  <nav className="border-b border-slate-800 bg-slate-950/50 backdrop-blur-md sticky top-0 z-50">
-                        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-                              <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 bg-linear-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-orange-500/20">
+            <div
+                  className="min-h-screen text-[var(--text-primary)] selection:bg-[var(--accent-primary)]/20"
+                  style={{ background: 'var(--bg-canvas)' }}
+            >
+                  {/* Command Center Navigation */}
+                  <nav className="border-b-2 border-[var(--border-default)] glass sticky top-0 z-50 diagonal-accent">
+                        <div className="container mx-auto px-4 lg:px-8 h-20 flex items-center justify-between">
+                              {/* Logo & Branding */}
+                              <div className="flex items-center gap-4 animate-fade-in">
+                                    <div
+                                          className="w-12 h-12 bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] flex items-center justify-center font-black text-white text-2xl shadow-lg glow-orange-sm"
+                                          style={{
+                                                clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)'
+                                          }}
+                                    >
                                           F
                                     </div>
-                                    <span className="font-black text-xl tracking-tight text-white uppercase italic">
-                                          Flash<span className="text-orange-500">Rush</span>
-                                    </span>
+                                    <div>
+                                          <h1 className="text-2xl font-black uppercase tracking-tighter leading-none">
+                                                FLASH<span className="text-gradient">RUSH</span>
+                                          </h1>
+                                          <p className="micro-text text-[var(--text-muted)] text-[0.65rem]">
+                                                MISSION CONTROL
+                                          </p>
+                                    </div>
                               </div>
 
-                              <div className="flex items-center gap-6">
-                                    <span className="hidden md:inline text-xs font-bold text-slate-500 uppercase tracking-widest">
-                                          Live Auction Platform v1.0
-                                    </span>
-                                    <button
-                                          onClick={() => {
-                                                // In a real app, we'd have a logout handler in the UI
-                                                window.location.href = '/login';
-                                          }}
-                                          className="px-4 py-2 text-sm font-bold text-slate-400 hover:text-white transition-colors"
-                                    >
-                                          Sign Out
-                                    </button>
+                              {/* Status & User Actions */}
+                              <div className="flex items-center gap-6 animate-fade-in stagger-1">
+                                    <LiveBadge className="hidden md:flex" />
+                                    <div className="hidden lg:flex items-center gap-2 text-sm">
+                                          <div className="w-2 h-2 bg-[var(--data-success)] rounded-full animate-pulse" />
+                                          <span className="mono-number text-[var(--text-secondary)]">
+                                                SYSTEM OPERATIONAL
+                                          </span>
+                                    </div>
+                                    <UserDropdown />
                               </div>
                         </div>
                   </nav>
 
-                  <main>
-                        <FlashSaleDashboard />
+                  {/* Main Content */}
+                  <main className="container mx-auto px-4 lg:px-8 py-8">
+                        {/* Personalized Hero Section */}
+                        {user && (
+                              <div className="mb-12 animate-fade-in-up">
+                                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 pb-6 border-b-2 border-[var(--border-default)]">
+                                          <div>
+                                                <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-2">
+                                                      WELCOME BACK,
+                                                </h2>
+                                                <h3 className="text-4xl md:text-5xl font-black uppercase tracking-tighter text-gradient leading-none">
+                                                      {user.username}
+                                                </h3>
+                                          </div>
+                                          <div className="flex flex-col items-start md:items-end gap-2">
+                                                <p className="micro-text text-[var(--text-muted)]">OPERATOR ID</p>
+                                                <p className="mono-number text-[var(--text-secondary)] text-sm">
+                                                      {user.id?.slice(0, 12).toUpperCase() || 'N/A'}
+                                                </p>
+                                          </div>
+                                    </div>
+                              </div>
+                        )}
+
+                        {/* Flash Sale Dashboard */}
+                        <div className="animate-fade-in-up stagger-2">
+                              <FlashSaleDashboard />
+                        </div>
                   </main>
 
-                  <footer className="border-t border-slate-900 bg-slate-950 py-12">
-                        <div className="container mx-auto px-4 text-center space-y-4">
-                              <p className="text-slate-600 text-sm font-medium">
-                                    &copy; 2026 FlashRush. All rights reserved. High-performance real-time engine.
-                              </p>
-                              <div className="flex justify-center gap-8 text-xs font-bold text-slate-700 uppercase tracking-[0.2em]">
-                                    <a href="#" className="hover:text-orange-500 transition-colors">
-                                          Privacy
-                                    </a>
-                                    <a href="#" className="hover:text-orange-500 transition-colors">
-                                          Terms
-                                    </a>
-                                    <a href="#" className="hover:text-orange-500 transition-colors">
-                                          Support
-                                    </a>
+                  {/* Industrial Footer */}
+                  <footer
+                        className="mt-20 border-t-2 border-[var(--border-default)] py-12"
+                        style={{ background: 'var(--bg-surface)' }}
+                  >
+                        <div className="container mx-auto px-4 lg:px-8">
+                              <div className="grid md:grid-cols-3 gap-8 mb-8">
+                                    {/* Branding */}
+                                    <div>
+                                          <h4 className="text-xl font-black uppercase mb-4">FLASHRUSH</h4>
+                                          <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                                                High-performance real-time flash sale platform. Built for speed.
+                                          </p>
+                                    </div>
+
+                                    {/* Links */}
+                                    <div>
+                                          <h5 className="micro-text text-[var(--text-muted)] mb-4">QUICK LINKS</h5>
+                                          <ul className="space-y-2">
+                                                <li>
+                                                      <a
+                                                            href="#"
+                                                            className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                                                      >
+                                                            Privacy Policy
+                                                      </a>
+                                                </li>
+                                                <li>
+                                                      <a
+                                                            href="#"
+                                                            className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                                                      >
+                                                            Terms of Service
+                                                      </a>
+                                                </li>
+                                                <li>
+                                                      <a
+                                                            href="#"
+                                                            className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                                                      >
+                                                            Support Center
+                                                      </a>
+                                                </li>
+                                          </ul>
+                                    </div>
+
+                                    {/* Status */}
+                                    <div>
+                                          <h5 className="micro-text text-[var(--text-muted)] mb-4">SYSTEM STATUS</h5>
+                                          <div className="flex items-center gap-2 text-sm mb-2">
+                                                <div className="w-2 h-2 bg-[var(--data-success)] rounded-full animate-pulse" />
+                                                <span className="text-[var(--text-secondary)]">All Systems Operational</span>
+                                          </div>
+                                          <p className="mono-number text-xs text-[var(--text-muted)]">UPTIME: 99.9%</p>
+                                    </div>
+                              </div>
+
+                              {/* Copyright */}
+                              <div className="pt-8 border-t border-[var(--border-default)]">
+                                    <p className="text-center text-sm text-[var(--text-muted)]">
+                                          &copy; 2026 FLASHRUSH. All rights reserved.
+                                    </p>
                               </div>
                         </div>
                   </footer>
