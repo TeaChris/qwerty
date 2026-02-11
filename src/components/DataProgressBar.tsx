@@ -22,13 +22,13 @@ export const DataProgressBar: FC<DataProgressBarProps> = ({ current, total, labe
             <div className={`space-y-2 ${className}`}>
                   {label && (
                         <div className="flex items-center justify-between">
-                              <span className="micro-text text-[var(--text-muted)]">{label}</span>
-                              <span className="mono-number text-sm font-bold text-[var(--text-primary)]">
+                              <span className="micro-text text-(--text-muted)">{label}</span>
+                              <span className="mono-number text-sm font-bold text-(--text-primary)">
                                     {percentage.toFixed(0)}% CLAIMED
                               </span>
                         </div>
                   )}
-                  <div className="relative h-3 bg-[var(--bg-elevated)] border border-[var(--border-default)] overflow-hidden">
+                  <div className="relative h-3 bg-(--bg-elevated) border border-(--border-default) overflow-hidden">
                         {/* Background shimmer */}
                         <div
                               className="absolute inset-0 animate-shimmer"
@@ -45,10 +45,10 @@ export const DataProgressBar: FC<DataProgressBarProps> = ({ current, total, labe
                         />
                   </div>
                   <div className="flex items-center justify-between text-xs">
-                        <span className="mono-number text-[var(--text-secondary)]">
+                        <span className="mono-number text-(--text-secondary)">
                               {current.toLocaleString()} / {total.toLocaleString()}
                         </span>
-                        <span className="text-[var(--text-muted)]">{total - current} remaining</span>
+                        <span className="text-(--text-muted)">{total - current} remaining</span>
                   </div>
             </div>
       );
