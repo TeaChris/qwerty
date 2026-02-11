@@ -49,16 +49,16 @@ export const UserDropdown: FC = () => {
                   {/* Trigger Button */}
                   <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="flex items-center gap-3 px-3 py-2 rounded transition-all hover:bg-[var(--bg-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)]"
+                        className="flex items-center gap-3 px-3 py-2 rounded transition-all hover:bg-(--bg-hover) focus:outline-none focus:ring-2 focus:ring-(--accent-primary)"
                         aria-expanded={isOpen}
                         aria-haspopup="true"
                   >
                         <UserAvatar username={user.username} size="sm" />
-                        <span className="hidden md:inline text-sm font-medium text-[var(--text-primary)]">
+                        <span className="hidden md:inline text-sm font-medium text-(--text-primary)">
                               {user.username}
                         </span>
                         <svg
-                              className={`w-4 h-4 text-[var(--text-muted)] transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                              className={`w-4 h-4 text-(--text-muted) transition-transform ${isOpen ? 'rotate-180' : ''}`}
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -69,16 +69,16 @@ export const UserDropdown: FC = () => {
 
                   {/* Dropdown Menu */}
                   {isOpen && (
-                        <div className="absolute right-0 mt-2 w-72 glass rounded-none border-2 border-[var(--border-accent)] overflow-hidden z-50 animate-fade-in-down">
+                        <div className="absolute right-0 mt-2 w-72 glass rounded-none border-2 border-(--border-accent) overflow-hidden z-50 animate-fade-in-down">
                               {/* User Info Section */}
-                              <div className="p-4 border-b border-[var(--border-default)] bg-[var(--bg-elevated)]">
+                              <div className="p-4 border-b border-(--border-default) bg-(--bg-elevated)">
                                     <div className="flex items-start gap-3">
                                           <UserAvatar username={user.username} size="lg" />
                                           <div className="flex-1 min-w-0">
-                                                <h3 className="font-black text-lg text-[var(--text-primary)] truncate">
+                                                <h3 className="font-black text-lg text-(--text-primary) truncate">
                                                       {user.username}
                                                 </h3>
-                                                <p className="text-xs text-[var(--text-muted)] truncate mono-number">
+                                                <p className="text-xs text-(--text-muted) truncate mono-number">
                                                       {user.email}
                                                 </p>
                                                 <p className="text-xs text-(--text-secondary) mt-1">
