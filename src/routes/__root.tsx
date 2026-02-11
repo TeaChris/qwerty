@@ -9,10 +9,31 @@ const RootComponent = () => {
       // Show loading state while checking authentication
       if (!isInitialized) {
             return (
-                  <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-                        <div className="flex flex-col items-center gap-4">
-                              <div className="w-12 h-12 border-4 border-orange-500/20 border-t-orange-500 rounded-full animate-spin" />
-                              <p className="text-slate-400 text-sm font-medium">Loading...</p>
+                  <div
+                        className="min-h-screen flex items-center justify-center"
+                        style={{ background: 'var(--bg-canvas)' }}
+                  >
+                        <div className="flex flex-col items-center gap-6">
+                              <div className="relative">
+                                    {/* Spinning octagon */}
+                                    <div
+                                          className="w-16 h-16 border-4 border-[var(--border-accent)] border-t-[var(--accent-primary)] animate-spin"
+                                          style={{
+                                                clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)'
+                                          }}
+                                    />
+                                    {/* Glow effect */}
+                                    <div
+                                          className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-[var(--accent-primary)] opacity-20 blur-md animate-spin"
+                                          style={{
+                                                clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)'
+                                          }}
+                                    />
+                              </div>
+                              <div className="space-y-2 text-center">
+                                    <p className="micro-text text-[var(--text-muted)] animate-pulse">INITIALIZING SYSTEM</p>
+                                    <p className="mono-number text-xs text-[var(--text-muted)]">[ █████░░░░░ ] 50%</p>
+                              </div>
                         </div>
                   </div>
             );
