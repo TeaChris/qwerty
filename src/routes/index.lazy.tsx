@@ -20,16 +20,16 @@ function IndexComponent() {
 
       return (
             <div
-                  className="min-h-screen text-[var(--text-primary)] selection:bg-[var(--accent-primary)]/20"
+                  className="min-h-screen text-(--text-primary) selection:bg-(--accent-primary)/20"
                   style={{ background: 'var(--bg-canvas)' }}
             >
                   {/* Command Center Navigation */}
-                  <nav className="border-b-2 border-[var(--border-default)] glass sticky top-0 z-50 diagonal-accent">
+                  <nav className="border-b-2 border-(--border-default) glass sticky top-0 z-50 diagonal-accent">
                         <div className="container mx-auto px-4 lg:px-8 h-20 flex items-center justify-between">
                               {/* Logo & Branding */}
                               <div className="flex items-center gap-4 animate-fade-in">
                                     <div
-                                          className="w-12 h-12 bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] flex items-center justify-center font-black text-white text-2xl shadow-lg glow-orange-sm"
+                                          className="w-12 h-12 bg-linear-to-br from-(--accent-primary) to-(--accent-secondary) flex items-center justify-center font-black text-white text-2xl shadow-lg glow-orange-sm"
                                           style={{
                                                 clipPath: 'polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%)'
                                           }}
@@ -40,7 +40,7 @@ function IndexComponent() {
                                           <h1 className="text-2xl font-black uppercase tracking-tighter leading-none">
                                                 FLASH<span className="text-gradient">RUSH</span>
                                           </h1>
-                                          <p className="micro-text text-[var(--text-muted)] text-[0.65rem]">
+                                          <p className="micro-text text-(--text-muted) text-[0.65rem]">
                                                 MISSION CONTROL
                                           </p>
                                     </div>
@@ -50,8 +50,8 @@ function IndexComponent() {
                               <div className="flex items-center gap-6 animate-fade-in stagger-1">
                                     <LiveBadge className="hidden md:flex" />
                                     <div className="hidden lg:flex items-center gap-2 text-sm">
-                                          <div className="w-2 h-2 bg-[var(--data-success)] rounded-full animate-pulse" />
-                                          <span className="mono-number text-[var(--text-secondary)]">
+                                          <div className="w-2 h-2 bg-(--data-success) rounded-full animate-pulse" />
+                                          <span className="mono-number text-(--text-secondary)">
                                                 SYSTEM OPERATIONAL
                                           </span>
                                     </div>
@@ -65,7 +65,7 @@ function IndexComponent() {
                         {/* Personalized Hero Section */}
                         {user && (
                               <div className="mb-12 animate-fade-in-up">
-                                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 pb-6 border-b-2 border-[var(--border-default)]">
+                                    <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 pb-6 border-b-2 border-(--border-default)">
                                           <div>
                                                 <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tighter leading-none mb-2">
                                                       WELCOME BACK,
@@ -75,8 +75,8 @@ function IndexComponent() {
                                                 </h3>
                                           </div>
                                           <div className="flex flex-col items-start md:items-end gap-2">
-                                                <p className="micro-text text-[var(--text-muted)]">OPERATOR ID</p>
-                                                <p className="mono-number text-[var(--text-secondary)] text-sm">
+                                                <p className="micro-text text-(--text-muted)">OPERATOR ID</p>
+                                                <p className="mono-number text-(--text-secondary) text-sm">
                                                       {user.id?.slice(0, 12).toUpperCase() || 'N/A'}
                                                 </p>
                                           </div>
@@ -92,7 +92,7 @@ function IndexComponent() {
 
                   {/* Industrial Footer */}
                   <footer
-                        className="mt-20 border-t-2 border-[var(--border-default)] py-12"
+                        className="mt-20 border-t-2 border-(--border-default) py-12"
                         style={{ background: 'var(--bg-surface)' }}
                   >
                         <div className="container mx-auto px-4 lg:px-8">
@@ -100,19 +100,19 @@ function IndexComponent() {
                                     {/* Branding */}
                                     <div>
                                           <h4 className="text-xl font-black uppercase mb-4">FLASHRUSH</h4>
-                                          <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
+                                          <p className="text-sm text-(--text-secondary) leading-relaxed">
                                                 High-performance real-time flash sale platform. Built for speed.
                                           </p>
                                     </div>
 
                                     {/* Links */}
                                     <div>
-                                          <h5 className="micro-text text-[var(--text-muted)] mb-4">QUICK LINKS</h5>
+                                          <h5 className="micro-text text-(--text-muted) mb-4">QUICK LINKS</h5>
                                           <ul className="space-y-2">
                                                 <li>
                                                       <a
                                                             href="#"
-                                                            className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                                                            className="text-sm text-(--text-secondary) hover:text-(--accent-primary) transition-colors"
                                                       >
                                                             Privacy Policy
                                                       </a>
@@ -120,7 +120,7 @@ function IndexComponent() {
                                                 <li>
                                                       <a
                                                             href="#"
-                                                            className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                                                            className="text-sm text-(--text-secondary) hover:text-(--accent-primary) transition-colors"
                                                       >
                                                             Terms of Service
                                                       </a>
@@ -128,7 +128,7 @@ function IndexComponent() {
                                                 <li>
                                                       <a
                                                             href="#"
-                                                            className="text-sm text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                                                            className="text-sm text-(--text-secondary) hover:text-(--accent-primary) transition-colors"
                                                       >
                                                             Support Center
                                                       </a>
@@ -138,19 +138,19 @@ function IndexComponent() {
 
                                     {/* Status */}
                                     <div>
-                                          <h5 className="micro-text text-[var(--text-muted)] mb-4">SYSTEM STATUS</h5>
+                                          <h5 className="micro-text text-(--text-muted) mb-4">SYSTEM STATUS</h5>
                                           <div className="flex items-center gap-2 text-sm mb-2">
-                                                <div className="w-2 h-2 bg-[var(--data-success)] rounded-full animate-pulse" />
-                                                <span className="text-[var(--text-secondary)]">All Systems Operational</span>
+                                                <div className="w-2 h-2 bg-(--data-success) rounded-full animate-pulse" />
+                                                <span className="text-(--text-secondary)">All Systems Operational</span>
                                           </div>
-                                          <p className="mono-number text-xs text-[var(--text-muted)]">UPTIME: 99.9%</p>
+                                          <p className="mono-number text-xs text-(--text-muted)">UPTIME: 99.9%</p>
                                     </div>
                               </div>
 
                               {/* Copyright */}
-                              <div className="pt-8 border-t border-[var(--border-default)]">
-                                    <p className="text-center text-sm text-[var(--text-muted)]">
-                                          &copy; 2026 FLASHRUSH. All rights reserved.
+                              <div className="pt-8 border-t border-(--border-default)">
+                                    <p className="text-center text-sm text-(--text-muted)">
+                                          &copy; {new Date().getFullYear()} FLASHRUSH. All rights reserved.
                                     </p>
                               </div>
                         </div>
