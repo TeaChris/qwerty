@@ -1,9 +1,9 @@
 import { type FC, useState, useRef, useEffect } from 'react';
 import { useAuthStore } from '../stores/auth.store';
 import { UserAvatar } from './UserAvatar';
-import { api } from '../lib/use.api';
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router';
+import { authService } from '../services/auth.service';
 
 export const UserDropdown: FC = () => {
       const { user, logout } = useAuthStore();
@@ -29,7 +29,7 @@ export const UserDropdown: FC = () => {
       }, [isOpen]);
 
       const handleLogout = async () => {
-            const { error } = await api('/auth/sign-out');
+            const { error } = await authService.logout();
 
             if (error) {
                   toast.error(error.message || 'Failed to sign out');
@@ -49,7 +49,7 @@ export const UserDropdown: FC = () => {
                   {/* Trigger Button */}
                   <button
                         onClick={() => setIsOpen(!isOpen)}
-                        className="flex items-center gap-3 px-3 py-2 rounded transition-all hover:bg-(--bg-hover) focus:outline-none focus:ring-2 focus:ring-(--accent-primary)"
+                        className="flex items-center gap-3 px-3 py-2 rounded transition-all hover:bg-var(--bg-hover) focus:outline-none focus:ring-2 focus:ring-(--accent-primary)"
                         aria-expanded={isOpen}
                         aria-haspopup="true"
                   >
@@ -96,7 +96,7 @@ export const UserDropdown: FC = () => {
                                                 // Navigate to profile/settings when implemented
                                                 toast.info('Profile settings coming soon');
                                           }}
-                                          className="w-full text-left px-4 py-3 text-sm font-medium text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg-hover) transition-colors"
+                                          className="w-full text-left px-4 py-3 text-sm font-medium text-(--text-secondary)] hover:text-(--text-primary)] hover:bg-(--bg-hover)] transition-colors"
                                     >
                                           ⚙️ Account Settings
                                     </button>
@@ -105,17 +105,17 @@ export const UserDropdown: FC = () => {
                                                 setIsOpen(false);
                                                 toast.info('Purchase history coming soon');
                                           }}
-                                          className="w-full text-left px-4 py-3 text-sm font-medium text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg-hover) transition-colors"
+                                          className="w-full text-left px-4 py-3 text-sm font-medium text-(--text-secondary)] hover:text-(--text-primary) hover:bg-(--bg-hover) transition-colors"
                                     >
                                           📦 Purchase History
                                     </button>
                               </div>
 
                               {/* Logout Section */}
-                              <div className="p-2 border-t border-(--border-default) bg-(--bg-surface)">
+                              <div className="p-2 border-t border-(--border-default) bg-(--bg-surface)]">
                                     <button
                                           onClick={handleLogout}
-                                          className="w-full text-left px-4 py-3 text-sm font-bold text-(--data-danger) hover:bg-(--bg-hover) transition-colors"
+                                          className="w-full text-left px-4 py-3 text-sm font-bold text-(--data-danger)] hover:bg-(--bg-hover)] transition-colors"
                                     >
                                           🚪 Sign Out
                                     </button>
