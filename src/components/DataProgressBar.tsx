@@ -28,7 +28,7 @@ export const DataProgressBar: FC<DataProgressBarProps> = ({ current, total, labe
                               </span>
                         </div>
                   )}
-                  <div className="relative h-3 bg-(--bg-elevated) border border-(--border-default) overflow-hidden">
+                  <div className="relative h-3 bg-(--bg-elevated) border border-(--border-default)] overflow-hidden">
                         {/* Background shimmer */}
                         <div
                               className="absolute inset-0 animate-shimmer"
