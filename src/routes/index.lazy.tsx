@@ -1,7 +1,7 @@
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
 import { FlashSaleDashboard } from '../components/flash-sale';
 import { useAuth } from '../hooks';
-import { UserDropdown, LiveBadge } from '../components';
+import { UserDropdown, LiveBadge, ProductGrid } from '../components';
 import { useAuthStore } from '../stores/auth.store';
 
 export const Route = createLazyFileRoute('/')({
@@ -85,8 +85,13 @@ function IndexComponent() {
                         )}
 
                         {/* Flash Sale Dashboard */}
-                        <div className="animate-fade-in-up stagger-2">
+                        <div className="animate-fade-in-up stagger-2 mb-12">
                               <FlashSaleDashboard />
+                        </div>
+
+                        {/* Product Grid */}
+                        <div className="animate-fade-in-up stagger-3">
+                              <ProductGrid />
                         </div>
                   </main>
 
