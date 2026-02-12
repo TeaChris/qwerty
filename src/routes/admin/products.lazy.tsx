@@ -9,6 +9,7 @@ import {
       type CreateProductRequest
 } from '../../lib/admin.api';
 import { toast } from 'sonner';
+import { AdminHeader } from '../../components/admin/AdminHeader';
 
 export const Route = createLazyFileRoute('/admin/products')({
       component: AdminProducts
@@ -97,26 +98,7 @@ function AdminProducts() {
 
       return (
             <div className="min-h-screen bg-(--bg-canvas) text-(--text-primary)">
-                  {/* Header */}
-                  <header className="border-b-2 border-(--border-default) glass sticky top-0 z-50">
-                        <div className="container mx-auto px-6 py-4">
-                              <div className="flex items-center justify-between">
-                                    <div>
-                                          <h1 className="text-2xl font-black tracking-tight">PRODUCT MANAGEMENT</h1>
-                                          <p className="micro-text text-(--text-muted) text-xs mt-1">
-                                                CREATE & MANAGE PRODUCTS
-                                          </p>
-                                    </div>
-                                    <button
-                                          onClick={() => setShowCreateModal(true)}
-                                          className="px-4 py-2 bg-(--accent-primary) text-white font-bold text-sm hover:bg-(--accent-secondary) transition-colors flex items-center gap-2"
-                                    >
-                                          <span>➕</span>
-                                          CREATE PRODUCT
-                                    </button>
-                              </div>
-                        </div>
-                  </header>
+                  <AdminHeader title="Product Management" subtitle="Create & Manage Products" />
 
                   {/* Main Content */}
                   <main className="container mx-auto px-6 py-8">
