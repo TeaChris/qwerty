@@ -4,6 +4,7 @@ import { useAuthStore } from '../../stores/auth.store';
 import { getDashboardStats, type DashboardStats } from '../../lib/admin.api';
 import { toast } from 'sonner';
 import { AdminHeader } from '../../components/admin/AdminHeader';
+import { LoadingScreen } from '../../components';
 
 export const Route = createLazyFileRoute('/admin/dashboard')({
       component: AdminDashboard
@@ -41,11 +42,7 @@ function AdminDashboard() {
       }
 
       if (isLoading || loadingStats) {
-            return (
-                  <div className="min-h-screen flex items-center justify-center bg-(--bg-canvas)">
-                        <div className="text-(--text-primary) text-lg">Loading...</div>
-                  </div>
-            );
+            return <LoadingScreen message="Aggregating System Intelligence" progress={stats ? 90 : 40} />;
       }
 
       return (
