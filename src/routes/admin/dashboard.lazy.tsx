@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAuthStore } from '../../stores/auth.store';
 import { getDashboardStats, type DashboardStats } from '../../lib/admin.api';
 import { toast } from 'sonner';
+import { AdminHeader } from '../../components/admin/AdminHeader';
 
 export const Route = createLazyFileRoute('/admin/dashboard')({
       component: AdminDashboard
@@ -48,28 +49,8 @@ function AdminDashboard() {
       }
 
       return (
-            <div className="min-h-screen bg-(--bg-canvas)] text-(--text-primary)]">
-                  {/* Header */}
-                  <header className="border-b-2 border-(--border-default) glass sticky top-0 z-50">
-                        <div className="container mx-auto px-6 py-4">
-                              <div className="flex items-center justify-between">
-                                    <div>
-                                          <h1 className="text-2xl font-black tracking-tight">ADMIN DASHBOARD</h1>
-                                          <p className="micro-text text-(--text-muted) text-xs mt-1">
-                                                SYSTEM CONTROL CENTER
-                                          </p>
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                          <span className="mono-number text-sm text-(--text-secondary)">
-                                                {user?.username}
-                                          </span>
-                                          <div className="px-3 py-1 bg-(--accent-primary) text-white text-xs font-bold rounded">
-                                                ADMIN
-                                          </div>
-                                    </div>
-                              </div>
-                        </div>
-                  </header>
+            <div className="min-h-screen bg-(--bg-canvas) text-(--text-primary)">
+                  <AdminHeader title="Admin Dashboard" subtitle="System Control Center" />
 
                   {/* Main Content */}
                   <main className="container mx-auto px-6 py-8">
