@@ -24,13 +24,15 @@ export const authService = {
             return result;
       },
 
-      async logout(): Promise<void> {
+      async logout(): Promise<{ data?: { status: string }; error?: ApiError }> {
             try {
-                  await api('/auth/logout', {});
+                  const result = await api<{ status: string }>('/auth/logout', {});
+                  clearAccessToken();
+                  return result;
             } catch (error) {
                   console.error('Logout API error:', error);
-            } finally {
                   clearAccessToken();
+                  return { error: error as ApiError };
             }
       }
 };
