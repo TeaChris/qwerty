@@ -30,17 +30,17 @@ export function LoginForm() {
       };
 
       return (
-            <div className="w-full max-w-md mx-auto space-y-8 p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl animate-in fade-in zoom-in duration-500">
+            <div className="w-full max-w-md mx-auto space-y-8 p-8 bg-(--bg-surface) border border-(--border-default) rounded-3xl shadow-2xl animate-in fade-in zoom-in duration-500">
                   <div className="text-center space-y-2">
-                        <h1 className="text-3xl font-extrabold text-white tracking-tight">Welcome back</h1>
-                        <p className="text-slate-400 font-medium">Log in to participate in the flash sale</p>
+                        <h1 className="text-3xl font-extrabold text-(--text-primary) tracking-tight">Welcome back</h1>
+                        <p className="text-(--text-secondary) font-medium">Log in to participate in the flash sale</p>
                   </div>
 
                   <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <div className="space-y-2">
                               <label
                                     htmlFor="email"
-                                    className="text-sm font-bold text-slate-400 uppercase tracking-widest ml-1"
+                                    className="text-sm font-bold text-(--text-secondary) uppercase tracking-widest ml-1"
                               >
                                     Email Address
                               </label>
@@ -48,22 +48,24 @@ export function LoginForm() {
                                     id="email"
                                     type="email"
                                     {...register('email')}
-                                    className={`w-full px-5 py-4 bg-slate-800 border rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                                    className={`w-full px-5 py-4 bg-(--bg-elevated) border rounded-2xl text-(--text-primary) placeholder-(--text-muted) focus:outline-none focus:ring-2 transition-all ${
                                           errors.email
-                                                ? 'border-red-500/50 focus:ring-red-500/30'
-                                                : 'border-slate-700 focus:ring-orange-500/50 focus:border-orange-500'
+                                                ? 'border-(--data-danger) focus:ring-(--data-danger)/30'
+                                                : 'border-(--border-default) focus:ring-(--accent-primary)/50 focus:border-(--accent-primary)'
                                     }`}
                                     placeholder="you@example.com"
                               />
                               {errors.email && (
-                                    <p className="text-xs font-bold text-red-400 ml-1 mt-1">{errors.email.message}</p>
+                                    <p className="text-xs font-bold text-(--data-danger) ml-1 mt-1">
+                                          {errors.email.message}
+                                    </p>
                               )}
                         </div>
 
                         <div className="space-y-2">
                               <label
                                     htmlFor="password"
-                                    className="text-sm font-bold text-slate-400 uppercase tracking-widest ml-1"
+                                    className="text-sm font-bold text-(--text-secondary) uppercase tracking-widest ml-1"
                               >
                                     Password
                               </label>
@@ -71,15 +73,15 @@ export function LoginForm() {
                                     id="password"
                                     type="password"
                                     {...register('password')}
-                                    className={`w-full px-5 py-4 bg-slate-800 border rounded-2xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 transition-all ${
+                                    className={`w-full px-5 py-4 bg-(--bg-elevated) border rounded-2xl text-(--text-primary) placeholder-(--text-muted) focus:outline-none focus:ring-2 transition-all ${
                                           errors.password
-                                                ? 'border-red-500/50 focus:ring-red-500/30'
-                                                : 'border-slate-700 focus:ring-orange-500/50 focus:border-orange-500'
+                                                ? 'border-(--data-danger) focus:ring-(--data-danger)/30'
+                                                : 'border-(--border-default) focus:ring-(--accent-primary)/50 focus:border-(--accent-primary)'
                                     }`}
                                     placeholder="••••••••"
                               />
                               {errors.password && (
-                                    <p className="text-xs font-bold text-red-400 ml-1 mt-1">
+                                    <p className="text-xs font-bold text-(--data-danger) ml-1 mt-1">
                                           {errors.password.message}
                                     </p>
                               )}
@@ -93,8 +95,8 @@ export function LoginForm() {
             transition-all duration-300 transform active:scale-[0.98] cursor-pointer
             ${
                   isLoading
-                        ? 'bg-slate-700 cursor-not-allowed'
-                        : 'bg-linear-to-r from-orange-500 to-red-600 hover:shadow-lg hover:shadow-orange-500/20'
+                        ? 'bg-(--bg-hover) cursor-not-allowed'
+                        : 'bg-linear-to-r from-(--accent-primary) to-(--accent-tertiary) hover:shadow-lg hover:shadow-(--accent-primary)/20'
             }
           `}
                         >
@@ -125,20 +127,20 @@ export function LoginForm() {
                   </form>
 
                   <div className="text-center pt-2">
-                        <p className="text-sm text-slate-500">
+                        <p className="text-sm text-(--text-muted)">
                               Don't have an account?{' '}
-                              <Link to="/register" className="text-orange-500 font-bold hover:underline">
+                              <Link to="/register" className="text-(--accent-primary) font-bold hover:underline">
                                     Register for free
                               </Link>
                         </p>
                   </div>
 
-                  <div className="pt-4 flex items-center gap-4 text-slate-700">
-                        <div className="grow h-px bg-slate-800"></div>
+                  <div className="pt-4 flex items-center gap-4 text-(--text-muted)">
+                        <div className="grow h-px bg-(--border-default)"></div>
                         <span className="text-[10px] font-bold uppercase tracking-[0.2em] whitespace-nowrap">
                               Secure Login
                         </span>
-                        <div className="grow h-px bg-slate-800"></div>
+                        <div className="grow h-px bg-(--border-default)"></div>
                   </div>
             </div>
       );
