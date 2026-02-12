@@ -90,13 +90,24 @@ export const UserDropdown: FC = () => {
 
                               {/* Menu Items */}
                               <div className="p-2">
+                                    {user.role === 'ADMIN' && (
+                                          <button
+                                                onClick={() => {
+                                                      setIsOpen(false);
+                                                      navigate({ to: '/admin/dashboard' });
+                                                }}
+                                                className="w-full text-left px-4 py-3 text-sm font-bold text-(--accent-primary) border-b border-(--border-default) hover:bg-(--bg-hover) transition-colors flex items-center gap-2"
+                                          >
+                                                🛡️ Admin Dashboard
+                                          </button>
+                                    )}
                                     <button
                                           onClick={() => {
                                                 setIsOpen(false);
                                                 // Navigate to profile/settings when implemented
                                                 toast.info('Profile settings coming soon');
                                           }}
-                                          className="w-full text-left px-4 py-3 text-sm font-medium text-(--text-secondary)] hover:text-(--text-primary)] hover:bg-(--bg-hover)] transition-colors"
+                                          className="w-full text-left px-4 py-3 text-sm font-medium text-(--text-secondary) hover:text-(--text-primary) hover:bg-(--bg-hover) transition-colors"
                                     >
                                           ⚙️ Account Settings
                                     </button>
