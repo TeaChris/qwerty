@@ -5,6 +5,7 @@ export { Input } from './Input';
 export type { InputProps } from './Input';
 
 export { Skeleton } from './Skeleton';
+export { LoadingScreen } from './LoadingScreen';
 export type { SkeletonProps } from './Skeleton';
 
 export { ErrorBoundary } from './ErrorBoundary';
