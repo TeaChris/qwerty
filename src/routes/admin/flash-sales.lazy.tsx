@@ -12,6 +12,7 @@ import {
       type Product
 } from '../../lib/admin.api';
 import { toast } from 'sonner';
+import { AdminHeader } from '../../components/admin/AdminHeader';
 
 export const Route = createLazyFileRoute('/admin/flash-sales')({
       component: AdminFlashSales
@@ -109,26 +110,7 @@ function AdminFlashSales() {
 
       return (
             <div className="min-h-screen bg-(--bg-canvas) text-(--text-primary)">
-                  {/* Header */}
-                  <header className="border-b-2 border-(--border-default) glass sticky top-0 z-50">
-                        <div className="container mx-auto px-6 py-4">
-                              <div className="flex items-center justify-between">
-                                    <div>
-                                          <h1 className="text-2xl font-black tracking-tight">FLASH SALE MANAGEMENT</h1>
-                                          <p className="micro-text text-(--text-muted) text-xs mt-1">
-                                                SCHEDULE & CONTROL FLASH SALES
-                                          </p>
-                                    </div>
-                                    <button
-                                          onClick={() => setShowCreateModal(true)}
-                                          className="px-4 py-2 bg-(--data-danger) text-white font-bold text-sm hover:opacity-90 transition-opacity flex items-center gap-2"
-                                    >
-                                          <span>⚡</span>
-                                          CREATE FLASH SALE
-                                    </button>
-                              </div>
-                        </div>
-                  </header>
+                  <AdminHeader title="Flash Sale Management" subtitle="Schedule & Control Flash Sales" />
 
                   {/* Main Content */}
                   <main className="container mx-auto px-6 py-8">
