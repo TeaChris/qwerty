@@ -10,6 +10,7 @@ import {
 } from '../../lib/admin.api';
 import { toast } from 'sonner';
 import { AdminHeader } from '../../components/admin/AdminHeader';
+import { LoadingScreen } from '../../components';
 
 export const Route = createLazyFileRoute('/admin/products')({
       component: AdminProducts
@@ -89,11 +90,7 @@ function AdminProducts() {
       };
 
       if (isLoading) {
-            return (
-                  <div className="min-h-screen flex items-center justify-center bg-(--bg-canvas)">
-                        <div className="text-(--text-primary)">Loading...</div>
-                  </div>
-            );
+            return <LoadingScreen message="Syncing Inventory Database" progress={30} />;
       }
 
       return (
