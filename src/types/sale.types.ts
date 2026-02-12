@@ -41,6 +41,7 @@ export interface User {
       id: string;
       email: string;
       username: string;
+      role: 'ADMIN' | 'USER';
 }
 
 export interface LoginRequest extends Record<string, unknown> {
