@@ -17,6 +17,9 @@ const RegisterLazyRouteImport = createFileRoute('/register')()
 const LoginLazyRouteImport = createFileRoute('/login')()
 const CheckEmailLazyRouteImport = createFileRoute('/check-email')()
 const IndexLazyRouteImport = createFileRoute('/')()
+const AdminProductsLazyRouteImport = createFileRoute('/admin/products')()
+const AdminFlashSalesLazyRouteImport = createFileRoute('/admin/flash-sales')()
+const AdminDashboardLazyRouteImport = createFileRoute('/admin/dashboard')()
 
 const VerifyEmailLazyRoute = VerifyEmailLazyRouteImport.update({
   id: '/verify-email',
@@ -43,6 +46,27 @@ const IndexLazyRoute = IndexLazyRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+const AdminProductsLazyRoute = AdminProductsLazyRouteImport.update({
+  id: '/admin/products',
+  path: '/admin/products',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/admin/products.lazy').then((d) => d.Route),
+)
+const AdminFlashSalesLazyRoute = AdminFlashSalesLazyRouteImport.update({
+  id: '/admin/flash-sales',
+  path: '/admin/flash-sales',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/admin/flash-sales.lazy').then((d) => d.Route),
+)
+const AdminDashboardLazyRoute = AdminDashboardLazyRouteImport.update({
+  id: '/admin/dashboard',
+  path: '/admin/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/admin/dashboard.lazy').then((d) => d.Route),
+)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
@@ -50,6 +74,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/verify-email': typeof VerifyEmailLazyRoute
+  '/admin/dashboard': typeof AdminDashboardLazyRoute
+  '/admin/flash-sales': typeof AdminFlashSalesLazyRoute
+  '/admin/products': typeof AdminProductsLazyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
@@ -57,6 +84,9 @@ export interface FileRoutesByTo {
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/verify-email': typeof VerifyEmailLazyRoute
+  '/admin/dashboard': typeof AdminDashboardLazyRoute
+  '/admin/flash-sales': typeof AdminFlashSalesLazyRoute
+  '/admin/products': typeof AdminProductsLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -65,12 +95,31 @@ export interface FileRoutesById {
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/verify-email': typeof VerifyEmailLazyRoute
+  '/admin/dashboard': typeof AdminDashboardLazyRoute
+  '/admin/flash-sales': typeof AdminFlashSalesLazyRoute
+  '/admin/products': typeof AdminProductsLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/check-email' | '/login' | '/register' | '/verify-email'
+  fullPaths:
+    | '/'
+    | '/check-email'
+    | '/login'
+    | '/register'
+    | '/verify-email'
+    | '/admin/dashboard'
+    | '/admin/flash-sales'
+    | '/admin/products'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/check-email' | '/login' | '/register' | '/verify-email'
+  to:
+    | '/'
+    | '/check-email'
+    | '/login'
+    | '/register'
+    | '/verify-email'
+    | '/admin/dashboard'
+    | '/admin/flash-sales'
+    | '/admin/products'
   id:
     | '__root__'
     | '/'
@@ -78,6 +127,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/verify-email'
+    | '/admin/dashboard'
+    | '/admin/flash-sales'
+    | '/admin/products'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -86,6 +138,9 @@ export interface RootRouteChildren {
   LoginLazyRoute: typeof LoginLazyRoute
   RegisterLazyRoute: typeof RegisterLazyRoute
   VerifyEmailLazyRoute: typeof VerifyEmailLazyRoute
+  AdminDashboardLazyRoute: typeof AdminDashboardLazyRoute
+  AdminFlashSalesLazyRoute: typeof AdminFlashSalesLazyRoute
+  AdminProductsLazyRoute: typeof AdminProductsLazyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -125,6 +180,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/products': {
+      id: '/admin/products'
+      path: '/admin/products'
+      fullPath: '/admin/products'
+      preLoaderRoute: typeof AdminProductsLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/flash-sales': {
+      id: '/admin/flash-sales'
+      path: '/admin/flash-sales'
+      fullPath: '/admin/flash-sales'
+      preLoaderRoute: typeof AdminFlashSalesLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/admin/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -134,6 +210,9 @@ const rootRouteChildren: RootRouteChildren = {
   LoginLazyRoute: LoginLazyRoute,
   RegisterLazyRoute: RegisterLazyRoute,
   VerifyEmailLazyRoute: VerifyEmailLazyRoute,
+  AdminDashboardLazyRoute: AdminDashboardLazyRoute,
+  AdminFlashSalesLazyRoute: AdminFlashSalesLazyRoute,
+  AdminProductsLazyRoute: AdminProductsLazyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
