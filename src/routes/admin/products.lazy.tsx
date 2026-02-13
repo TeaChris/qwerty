@@ -1,95 +1,35 @@
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { useAuthStore } from '../../stores/auth.store';
-import {
-      getProducts,
-      createProduct,
-      deleteProduct,
-      type Product,
-      type CreateProductRequest
-} from '../../lib/admin.api';
-import { toast } from 'sonner';
 import { AdminHeader } from '../../components/admin/AdminHeader';
 import { LoadingScreen } from '../../components';
+import { useAdminProducts } from '../../hooks';
+import type { CreateProductRequest } from '../../types/products';
 
 export const Route = createLazyFileRoute('/admin/products')({
       component: AdminProducts
 });
 
 function AdminProducts() {
-      const { user, isLoading } = useAuthStore();
-      const [products, setProducts] = useState<Product[]>([]);
-      const [loadingProducts, setLoadingProducts] = useState(true);
+      const { user, isLoading: isAuthLoading } = useAuthStore();
       const [showCreateModal, setShowCreateModal] = useState(false);
-      const [page, setPage] = useState(1);
-      const [total, setTotal] = useState(0);
-
-      // Fetch products
-      const fetchProducts = useCallback(
-            async (isInitial = false) => {
-                  if (!isInitial) {
-                        setLoadingProducts(true);
-                  }
-
-                  const { data, error } = await getProducts(page, 10);
-
-                  if (error) {
-                        toast.error('Failed to load products');
-                        console.error(error);
-                  } else if (data) {
-                        setProducts(data.data.products);
-                        setTotal(data.data.pagination.total);
-                  }
-
-                  setLoadingProducts(false);
-            },
-            [page]
-      );
-
-      useEffect(() => {
-            const initFetch = async () => {
-                  if (user?.role === 'ADMIN') {
-                        await fetchProducts(true);
-                  }
-            };
-
-            initFetch();
-      }, [user, fetchProducts]);
+      const { products, loadingProducts, page, setPage, total, handleCreateProduct, handleDeleteProduct } =
+            useAdminProducts();
 
       // Redirect non-admin users
-      if (!isLoading && (!user || user.role !== 'ADMIN')) {
+      if (!isAuthLoading && (!user || user.role !== 'ADMIN')) {
             return <Navigate to="/" />;
       }
 
-      const handleCreateProduct = async (productData: CreateProductRequest) => {
-            const { error } = await createProduct(productData);
-
-            if (error) {
-                  toast.error(error.message || 'Failed to create product');
-                  return false;
+      const onCreateSuccess = async (productData: CreateProductRequest) => {
+            const success = await handleCreateProduct(productData);
+            if (success) {
+                  setShowCreateModal(false);
             }
-
-            toast.success('Product created successfully!');
-            setShowCreateModal(false);
-            fetchProducts(); // Refresh list
-            return true;
+            return success;
       };
 
-      const handleDeleteProduct = async (id: string) => {
-            if (!confirm('Are you sure you want to delete this product?')) return;
-
-            const { error } = await deleteProduct(id);
-
-            if (error) {
-                  toast.error(error.message || 'Failed to delete product');
-                  return;
-            }
-
-            toast.success('Product deleted successfully');
-            fetchProducts();
-      };
-
-      if (isLoading) {
+      if (isAuthLoading) {
             return <LoadingScreen message="Syncing Inventory Database" progress={30} />;
       }
 
@@ -220,7 +160,7 @@ function AdminProducts() {
 
                   {/* Create Modal */}
                   {showCreateModal && (
-                        <CreateProductModal onClose={() => setShowCreateModal(false)} onCreate={handleCreateProduct} />
+                        <CreateProductModal onClose={() => setShowCreateModal(false)} onCreate={onCreateSuccess} />
                   )}
             </div>
       );
