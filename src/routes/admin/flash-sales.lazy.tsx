@@ -1,107 +1,46 @@
-import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
-import { useState, useEffect, useCallback } from 'react';
-import { useAuthStore } from '../../stores/auth.store';
-import {
-      getFlashSales,
-      createFlashSale,
-      activateFlashSale,
-      deactivateFlashSale,
-      getProducts,
-      type FlashSale,
-      type CreateFlashSaleRequest,
-      type Product
-} from '../../lib/admin.api';
 import { toast } from 'sonner';
-import { AdminHeader } from '../../components/admin/AdminHeader';
+import { useState, useEffect } from 'react';
+import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
+
+import { useAdminFlashSales } from '../../hooks';
 import { LoadingScreen } from '../../components';
+import type { Product } from '../../types/products';
+import { useAuthStore } from '../../stores/auth.store';
+import { getProducts } from '../../services/products.service';
+import { AdminHeader } from '../../components/admin/AdminHeader';
+import type { CreateFlashSaleRequest, FlashSale } from '../../types/sales';
 
 export const Route = createLazyFileRoute('/admin/flash-sales')({
       component: AdminFlashSales
 });
 
 function AdminFlashSales() {
-      const { user, isLoading } = useAuthStore();
-      const [flashSales, setFlashSales] = useState<FlashSale[]>([]);
-      const [loadingSales, setLoadingSales] = useState(true);
+      const { user, isLoading: isAuthLoading } = useAuthStore();
       const [showCreateModal, setShowCreateModal] = useState(false);
-      const [statusFilter, setStatusFilter] = useState<string>('');
-
-      // Fetch flash sales
-      const fetchFlashSales = useCallback(
-            async (isInitial = false) => {
-                  if (!isInitial) {
-                        setLoadingSales(true);
-                  }
-                  const { data, error } = await getFlashSales(1, 20, statusFilter);
-
-                  if (error) {
-                        toast.error('Failed to load flash sales');
-                        console.error(error);
-                  } else if (data) {
-                        setFlashSales(data.data.flashSales);
-                  }
-
-                  setLoadingSales(false);
-            },
-            [statusFilter]
-      );
-
-      useEffect(() => {
-            const initFetch = async () => {
-                  if (user?.role === 'ADMIN') {
-                        await fetchFlashSales(true);
-                  }
-            };
-
-            initFetch();
-      }, [user, fetchFlashSales]);
+      const {
+            flashSales,
+            loadingSales,
+            statusFilter,
+            setStatusFilter,
+            handleCreateFlashSale,
+            handleActivate,
+            handleDeactivate
+      } = useAdminFlashSales();
 
       // Redirect non-admin users
-      if (!isLoading && (!user || user.role !== 'ADMIN')) {
+      if (!isAuthLoading && (!user || user.role !== 'ADMIN')) {
             return <Navigate to="/" />;
       }
 
-      const handleCreateFlashSale = async (saleData: CreateFlashSaleRequest) => {
-            const { error } = await createFlashSale(saleData);
-
-            if (error) {
-                  toast.error(error.message || 'Failed to create flash sale');
-                  return false;
+      const onCreateSuccess = async (saleData: CreateFlashSaleRequest) => {
+            const success = await handleCreateFlashSale(saleData);
+            if (success) {
+                  setShowCreateModal(false);
             }
-
-            toast.success('Flash sale created successfully!');
-            setShowCreateModal(false);
-            fetchFlashSales();
-            return true;
+            return success;
       };
 
-      const handleActivate = async (id: string) => {
-            const { error } = await activateFlashSale(id);
-
-            if (error) {
-                  toast.error(error.message || 'Failed to activate flash sale');
-                  return;
-            }
-
-            toast.success('Flash sale activated!');
-            fetchFlashSales();
-      };
-
-      const handleDeactivate = async (id: string) => {
-            if (!confirm('Are you sure you want to deactivate this flash sale?')) return;
-
-            const { error } = await deactivateFlashSale(id);
-
-            if (error) {
-                  toast.error(error.message || 'Failed to deactivate flash sale');
-                  return;
-            }
-
-            toast.success('Flash sale deactivated');
-            fetchFlashSales();
-      };
-
-      if (isLoading) {
+      if (isAuthLoading) {
             return <LoadingScreen message="Synchronizing Temporal Sales" progress={45} />;
       }
 
@@ -178,7 +117,7 @@ function AdminFlashSales() {
                               </div>
                         ) : (
                               <div className="grid grid-cols-1 gap-6">
-                                    {flashSales.map(sale => (
+                                    {flashSales.map((sale: FlashSale) => (
                                           <FlashSaleCard
                                                 key={sale._id}
                                                 sale={sale}
@@ -192,10 +131,7 @@ function AdminFlashSales() {
 
                   {/* Create Modal */}
                   {showCreateModal && (
-                        <CreateFlashSaleModal
-                              onClose={() => setShowCreateModal(false)}
-                              onCreate={handleCreateFlashSale}
-                        />
+                        <CreateFlashSaleModal onClose={() => setShowCreateModal(false)} onCreate={onCreateSuccess} />
                   )}
             </div>
       );
@@ -210,10 +146,10 @@ interface FlashSaleCardProps {
 
 function FlashSaleCard({ sale, onActivate, onDeactivate }: FlashSaleCardProps) {
       const statusColors = {
-            scheduled: 'var(--data-warning)',
-            active: 'var(--data-success)',
             ended: 'var(--text-muted)',
-            cancelled: 'var(--data-danger)'
+            active: 'var(--data-success)',
+            cancelled: 'var(--data-danger)',
+            scheduled: 'var(--data-warning)'
       };
 
       return (
