@@ -1,47 +1,23 @@
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
 import { useAuthStore } from '../../stores/auth.store';
-import { getDashboardStats, type DashboardStats } from '../../lib/admin.api';
-import { toast } from 'sonner';
 import { AdminHeader } from '../../components/admin/AdminHeader';
 import { LoadingScreen } from '../../components';
+import { useAdminStats } from '../../hooks';
 
 export const Route = createLazyFileRoute('/admin/dashboard')({
       component: AdminDashboard
 });
 
 function AdminDashboard() {
-      const { user, isLoading } = useAuthStore();
-      const [stats, setStats] = useState<DashboardStats | null>(null);
-      const [loadingStats, setLoadingStats] = useState(true);
-
-      // Fetch dashboard stats
-      useEffect(() => {
-            const fetchStats = async () => {
-                  setLoadingStats(true);
-                  const { data, error } = await getDashboardStats();
-
-                  if (error) {
-                        toast.error('Failed to load dashboard stats');
-                        console.error(error);
-                  } else if (data) {
-                        setStats(data.data.stats);
-                  }
-
-                  setLoadingStats(false);
-            };
-
-            if (user?.role === 'ADMIN') {
-                  fetchStats();
-            }
-      }, [user]);
+      const { user, isLoading: isAuthLoading } = useAuthStore();
+      const { stats, loadingStats } = useAdminStats();
 
       // Redirect non-admin users
-      if (!isLoading && (!user || user.role !== 'ADMIN')) {
+      if (!isAuthLoading && (!user || user.role !== 'ADMIN')) {
             return <Navigate to="/" />;
       }
 
-      if (isLoading || loadingStats) {
+      if (isAuthLoading || loadingStats) {
             return <LoadingScreen message="Aggregating System Intelligence" progress={stats ? 90 : 40} />;
       }
 
