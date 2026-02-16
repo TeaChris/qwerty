@@ -1,8 +1,8 @@
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
-import { FlashSaleDashboard } from '../components/flash-sale';
+
+import { UserDropdown, LiveBadge, ProductGrid, FlashSaleDashboard } from '../components';
+import { useAuthStore } from '../stores';
 import { useAuth } from '../hooks';
-import { UserDropdown, LiveBadge, ProductGrid } from '../components';
-import { useAuthStore } from '../stores/auth.store';
 
 export const Route = createLazyFileRoute('/')({
       component: IndexComponent

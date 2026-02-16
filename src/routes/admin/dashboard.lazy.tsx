@@ -1,9 +1,8 @@
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
 
-import { AdminHeader } from '../../components/admin/AdminHeader';
-import { useAuthStore } from '../../stores/auth.store';
-import { LoadingScreen } from '../../components';
+import { useAuthStore } from '../../stores';
 import { useAdminStats } from '../../hooks';
+import { AdminHeader, LoadingScreen } from '../../components';
 
 export const Route = createLazyFileRoute('/admin/dashboard')({
       component: AdminDashboard

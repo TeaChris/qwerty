@@ -1,11 +1,12 @@
-export { UserAvatar } from './UserAvatar';
-export { UserDropdown } from './UserDropdown';
-export { LiveBadge } from './LiveBadge';
-export { KineticTimer } from './KineticTimer';
-export { DataProgressBar } from './DataProgressBar';
-export { LoadingScreen } from './ui';
-export { ProductCard } from './ProductCard';
-export { ProductGrid } from './ProductGrid';
+export { LiveBadge } from './live.badge';
+export { UserAvatar } from './user.avatar';
+export { ProductCard } from './product.card';
+export { ProductGrid } from './product.grid';
+export { UserDropdown } from './user.dropdown';
+export { KineticTimer } from './kinetic.timer';
+export { DataProgressBar } from './data.progress.bar';
 
-// Flash Sale Components (existing)
 export * from './flash-sale';
+export * from './admin';
+export * from './auth';
+export * from './ui';

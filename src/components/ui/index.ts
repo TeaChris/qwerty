@@ -1,11 +1,5 @@
-export { Button } from './Button';
-export type { ButtonProps } from './Button';
-
-export { Input } from './Input';
-export type { InputProps } from './Input';
-
-export { Skeleton } from './Skeleton';
-export { LoadingScreen } from './LoadingScreen';
-export type { SkeletonProps } from './Skeleton';
-
-export { ErrorBoundary } from './ErrorBoundary';
+export * from './button';
+export * from './input';
+export * from './skeleton';
+export * from './loading.screen';
+export * from './error.boundary';

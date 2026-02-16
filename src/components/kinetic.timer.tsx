@@ -49,14 +49,14 @@ export const KineticTimer: FC<KineticTimerProps> = ({ endsAt, className = '', on
 
       return (
             <div className={`inline-flex items-center gap-2 ${className}`}>
-                  <span className="text-[var(--text-muted)] text-sm">⏱</span>
+                  <span className="text-(--text-muted) text-sm">⏱</span>
                   <span
                         className={`
                               mono-number text-xl font-bold
                               ${
                                     timeLeft.isUrgent
-                                          ? 'text-[var(--data-danger)] animate-pulse-glow'
-                                          : 'text-[var(--accent-secondary)]'
+                                          ? 'text-(--data-danger) animate-pulse-glow'
+                                          : 'text-(--accent-secondary)'
                               }
                         `}
                   >

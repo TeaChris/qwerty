@@ -1,4 +1,4 @@
-import { LeaderboardItem } from './LeaderboardItem';
+import { LeaderboardItem } from './leaderboard.item';
 import type { LeaderboardEntry } from '../../types/sale.types';
 
 interface LeaderboardProps {

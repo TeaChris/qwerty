@@ -2,13 +2,11 @@ import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
 
+import { useAuthStore } from '../../stores';
+import { getProducts } from '../../services';
 import { useAdminFlashSales } from '../../hooks';
-import { LoadingScreen } from '../../components';
-import type { Product } from '../../types/products';
-import { useAuthStore } from '../../stores/auth.store';
-import { getProducts } from '../../services/products.service';
-import { AdminHeader } from '../../components/admin/AdminHeader';
-import type { CreateFlashSaleRequest, FlashSale } from '../../types/sales';
+import { AdminHeader, LoadingScreen } from '../../components';
+import type { Product, CreateFlashSaleRequest, FlashSale } from '../../types';
 
 export const Route = createLazyFileRoute('/admin/flash-sales')({
       component: AdminFlashSales

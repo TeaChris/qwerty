@@ -1,6 +1,7 @@
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
-import { RegisterForm } from '../components/auth/RegisterForm';
-import { useAuth } from '../hooks/useAuth';
+
+import { RegisterForm } from '../components';
+import { useAuth } from '../hooks';
 
 export const Route = createLazyFileRoute('/register')({
       component: RegisterRoute
@@ -25,7 +26,7 @@ function RegisterRoute() {
 
                   <div className="w-full max-w-md relative z-10 space-y-8">
                         <div className="flex flex-col items-center gap-4 text-center">
-                              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center font-black text-3xl text-white shadow-2xl shadow-orange-500/20 transform -rotate-3">
+                              <div className="w-16 h-16 bg-linear-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center font-black text-3xl text-white shadow-2xl shadow-orange-500/20 transform -rotate-3">
                                     F
                               </div>
                               <h1 className="text-4xl font-black tracking-tighter text-white italic uppercase">

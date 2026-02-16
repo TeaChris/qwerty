@@ -21,7 +21,7 @@ export const UserAvatar: FC<UserAvatarProps> = ({ username, size = 'md', classNa
                         ${sizeClasses[size]}
                         flex items-center justify-center
                         font-black
-                        bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)]
+                        bg-linear-to-br from-(--accent-primary) to-(--accent-secondary)]
                         text-white
                         transition-all duration-300
                         hover:scale-110 hover:rotate-12

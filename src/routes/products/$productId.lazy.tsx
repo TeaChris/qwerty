@@ -1,7 +1,8 @@
 import { createLazyFileRoute, Link } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
-import { api } from '../../lib/use.api';
-import type { Product } from '../../lib/admin.api';
+
+import { api } from '../../lib';
+import type { Product } from '../../types';
 import { LoadingScreen } from '../../components';
 
 export const Route = createLazyFileRoute('/products/$productId')({

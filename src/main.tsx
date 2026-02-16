@@ -3,8 +3,9 @@ import { createRoot } from 'react-dom/client';
 
 import { routeTree } from './routeTree.gen';
 import { SpeedInsights } from '@vercel/speed-insights/react';
+import { ErrorBoundary } from './components/ui/error.boundary';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
-import { ErrorBoundary } from './components/ui/ErrorBoundary';
+
 import './index.css';
 
 // Create the router instance

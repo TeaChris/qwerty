@@ -1,8 +1,9 @@
-import { createLazyFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-import { useEffect, useState, useRef } from 'react';
 import { toast } from 'sonner';
+import { useEffect, useState, useRef } from 'react';
 import { Loader2, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
-import { authService } from '../services/auth.service';
+import { createLazyFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
+
+import { authService } from '../services';
 
 export const Route = createLazyFileRoute('/verify-email')({
       component: VerifyEmailComponent
