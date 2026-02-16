@@ -1,9 +1,6 @@
-import { SaleStatusBadge } from './sale.status.badge';
-import { CountdownTimer } from './countdown.timer';
-import { StockIndicator } from './stock.indicator';
-import { BuyButton } from './buy.button';
-import type { SaleStatus } from '../../types/sale.types';
-import type { useCountdown } from '../../hooks/useCountdown';
+import { SaleStatusBadge, CountdownTimer, StockIndicator, BuyButton } from '../../components';
+import type { SaleStatus } from '../../types';
+import type { useCountdown } from '../../hooks';
 
 interface ProductCardProps {
       status: SaleStatus;
