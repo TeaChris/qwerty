@@ -1,5 +1,5 @@
 import { LeaderboardItem } from './leaderboard.item';
-import type { LeaderboardEntry } from '../../types/sale.types';
+import type { LeaderboardEntry } from '../../types';
 
 interface LeaderboardProps {
       entries: LeaderboardEntry[];
