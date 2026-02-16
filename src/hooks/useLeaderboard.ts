@@ -1,7 +1,8 @@
 import { useEffect, useCallback, useRef, useState } from 'react';
-import { useSaleStore } from '../stores/sale.store';
-import { saleService } from '../services/sale.service';
-import type { LeaderboardEntry } from '../types/sale.types';
+
+import { saleService } from './../services/sale.service';
+import type { LeaderboardEntry } from '../types';
+import { useSaleStore } from '../stores';
 
 interface UseLeaderboardResult {
       leaderboard: LeaderboardEntry[];
@@ -29,7 +30,8 @@ export function useLeaderboard(): UseLeaderboardResult {
                   setIsLoading(true);
 
                   try {
-                        const { data, error } = await saleService.getLeaderboard(pageNum, 10);
+                        if (!status?._id) return;
+                        const { data, error } = await saleService.getLeaderboard(status._id, pageNum, 10);
 
                         if (data) {
                               if (append) {
@@ -49,7 +51,7 @@ export function useLeaderboard(): UseLeaderboardResult {
                         setIsLoading(false);
                   }
             },
-            [leaderboard.length, setLeaderboard]
+            [leaderboard.length, setLeaderboard, status?._id]
       );
 
       // Initial fetch
