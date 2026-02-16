@@ -1,4 +1,4 @@
-import type { SaleStatusType } from '../../types/sale.types';
+import type { SaleStatusType } from '../../types';
 
 interface SaleStatusBadgeProps {
       status: SaleStatusType;
