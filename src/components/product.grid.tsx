@@ -1,9 +1,8 @@
 import { useEffect, useState, type FC } from 'react';
 
 import type { Product } from '../types';
-import { Skeleton } from './ui';
 import { getProducts } from '../services';
-import { ProductCard } from './product.card';
+import { Skeleton, ProductCard } from '../components';
 
 export const ProductGrid: FC = () => {
       const [products, setProducts] = useState<Product[]>([]);
