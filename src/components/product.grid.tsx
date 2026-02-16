@@ -47,14 +47,14 @@ export const ProductGrid: FC = () => {
                         </div>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
                         {isLoading ? (
-                              Array.from({ length: 4 }).map((_, i) => (
+                              [0.8, 1.2, 1.0, 1.4].map((ratio, i) => (
                                     <div
                                           key={i}
-                                          className="bg-(--bg-elevated) border-2 border-(--border-default) aspect-4/5 p-6 space-y-4"
+                                          className="break-inside-avoid mb-6 bg-(--bg-elevated) border-2 border-(--border-default) p-6 space-y-4"
                                     >
-                                          <Skeleton className="w-full aspect-square" />
+                                          <Skeleton className="w-full" style={{ aspectRatio: ratio }} />
                                           <Skeleton className="h-6 w-3/4" />
                                           <Skeleton className="h-4 w-1/2" />
                                     </div>
