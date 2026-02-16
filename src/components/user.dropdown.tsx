@@ -1,9 +1,10 @@
-import { type FC, useState, useRef, useEffect } from 'react';
-import { useAuthStore } from '../stores/auth.store';
-import { UserAvatar } from './user.avatar';
 import { toast } from 'sonner';
 import { useNavigate } from '@tanstack/react-router';
-import { authService } from '../services/auth.service';
+import { type FC, useState, useRef, useEffect } from 'react';
+
+import { useAuthStore } from '../stores';
+import { authService } from '../services';
+import { UserAvatar } from '../components';
 
 export const UserDropdown: FC = () => {
       const { user, logout } = useAuthStore();
