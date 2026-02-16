@@ -1,12 +1,10 @@
-import { toast } from 'sonner';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
 
 import { useAuthStore } from '../../stores';
-import { getProducts } from '../../services';
-import { useAdminFlashSales } from '../../hooks';
 import { AdminHeader, LoadingScreen } from '../../components';
-import type { Product, CreateFlashSaleRequest, FlashSale } from '../../types';
+import { useAdminFlashSales, useFlashSaleForm } from '../../hooks';
+import type { CreateFlashSaleRequest, FlashSale } from '../../types';
 
 export const Route = createLazyFileRoute('/admin/flash-sales')({
       component: AdminFlashSales
@@ -19,10 +17,10 @@ function AdminFlashSales() {
             flashSales,
             loadingSales,
             statusFilter,
-            setStatusFilter,
-            handleCreateFlashSale,
             handleActivate,
-            handleDeactivate
+            setStatusFilter,
+            handleDeactivate,
+            handleCreateFlashSale
       } = useAdminFlashSales();
 
       // Redirect non-admin users
@@ -66,7 +64,7 @@ function AdminFlashSales() {
                                           className={`px-4 py-2 font-bold text-sm ${
                                                 statusFilter === 'scheduled'
                                                       ? 'bg-(--accent-primary) text-white'
-                                                      : 'bg-(--bg-elevated) border-2 border-(--border-default) text-[var(--text-secondary) hover:border-(--accent-primary)'
+                                                      : 'bg-(--bg-elevated) border-2 border-(--border-default) text-(--text-secondary) hover:border-(--accent-primary)'
                                           } transition-colors`}
                                     >
                                           SCHEDULED
@@ -167,7 +165,7 @@ function FlashSaleCard({ sale, onActivate, onDeactivate }: FlashSaleCardProps) {
                         <div className="flex items-center gap-3">
                               <span
                                     className="px-3 py-1 text-xs font-bold text-white uppercase"
-                                    style={{ backgroundColor: statusColors[sale.status] }}
+                                    style={{ backgroundColor: statusColors[sale.status as keyof typeof statusColors] }}
                               >
                                     {sale.status}
                               </span>
@@ -200,91 +198,30 @@ interface CreateFlashSaleModalProps {
 }
 
 function CreateFlashSaleModal({ onClose, onCreate }: CreateFlashSaleModalProps) {
-      const [products, setProducts] = useState<Product[]>([]);
-      const [formData, setFormData] = useState<CreateFlashSaleRequest>({
-            title: '',
-            description: '',
-            products: [],
-            startTime: '',
-            endTime: '',
-            duration: 60
-      });
-      const [submitting, setSubmitting] = useState(false);
-      const [selectedProduct, setSelectedProduct] = useState('');
-      const [salePrice, setSalePrice] = useState(0);
-      const [stockLimit, setStockLimit] = useState(0);
+      const {
+            products,
+            formData,
+            salePrice,
+            addProduct,
+            stockLimit,
+            submitting,
+            setFormData,
+            handleSubmit,
+            setSalePrice,
+            removeProduct,
+            setStockLimit,
+            selectedProduct,
+            setSelectedProduct
+      } = useFlashSaleForm();
 
-      // Fetch products on mount
-      useEffect(() => {
-            const fetchProducts = async () => {
-                  const { data } = await getProducts(1, 100);
-                  if (data) {
-                        setProducts(data.data.products);
-                  }
-            };
-            fetchProducts();
-      }, []);
-
-      const addProduct = () => {
-            if (!selectedProduct || salePrice <= 0 || stockLimit <= 0) {
-                  toast.error('Please fill in all product details');
-                  return;
-            }
-
-            setFormData({
-                  ...formData,
-                  products: [
-                        ...formData.products,
-                        {
-                              productId: selectedProduct,
-                              salePrice,
-                              stockLimit
-                        }
-                  ]
-            });
-
-            setSelectedProduct('');
-            setSalePrice(0);
-            setStockLimit(0);
-      };
-
-      const removeProduct = (index: number) => {
-            setFormData({
-                  ...formData,
-                  products: formData.products.filter((_, i) => i !== index)
-            });
-      };
-
-      const handleSubmit = async (e: React.FormEvent) => {
-            e.preventDefault();
-
-            if (formData.products.length === 0) {
-                  toast.error('Please add at least one product to the flash sale');
-                  return;
-            }
-
-            setSubmitting(true);
-            const success = await onCreate(formData);
-            setSubmitting(false);
-
-            if (success) {
-                  setFormData({
-                        title: '',
-                        description: '',
-                        products: [],
-                        startTime: '',
-                        endTime: '',
-                        duration: 60
-                  });
-            }
-      };
+      const onFormSubmit = (e: React.FormEvent) => handleSubmit(e, onCreate);
 
       return (
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
                   <div className="glass border-2 border-(--border-accent) p-6 max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto">
                         <h2 className="text-xl font-black mb-4">CREATE NEW FLASH SALE</h2>
 
-                        <form onSubmit={handleSubmit} className="space-y-4">
+                        <form onSubmit={onFormSubmit} className="space-y-4">
                               <div>
                                     <label className="block micro-text text-xs text-(--text-muted) mb-2">TITLE *</label>
                                     <input
@@ -293,7 +230,7 @@ function CreateFlashSaleModal({ onClose, onCreate }: CreateFlashSaleModalProps) 
                                           value={formData.title}
                                           onChange={e => setFormData({ ...formData, title: e.target.value })}
                                           placeholder="Black Friday Mega Sale"
-                                          className="w-full px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-r(--accent-primary) outline-none"
+                                          className="w-full px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none"
                                     />
                               </div>
 
@@ -363,7 +300,7 @@ function CreateFlashSaleModal({ onClose, onCreate }: CreateFlashSaleModalProps) 
                                           <select
                                                 value={selectedProduct}
                                                 onChange={e => setSelectedProduct(e.target.value)}
-                                                className="col-span-2 px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default)] text-(--text-primary) focus:border-(--accent-primary) outline-none"
+                                                className="col-span-2 px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none"
                                           >
                                                 <option value="">Select product...</option>
                                                 {products.map(product => (
@@ -379,7 +316,7 @@ function CreateFlashSaleModal({ onClose, onCreate }: CreateFlashSaleModalProps) 
                                                 step="0.01"
                                                 value={salePrice || ''}
                                                 onChange={e => setSalePrice(parseFloat(e.target.value))}
-                                                className="px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary)] focus:border-(--accent-primary)] outline-none"
+                                                className="px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none"
                                           />
                                           <input
                                                 type="number"
@@ -412,7 +349,7 @@ function CreateFlashSaleModal({ onClose, onCreate }: CreateFlashSaleModalProps) 
                                                       return (
                                                             <div
                                                                   key={index}
-                                                                  className="flex items-center justify-between bg-(--bg-elevated)] p-2 text-sm"
+                                                                  className="flex items-center justify-between bg-(--bg-elevated) p-2 text-sm"
                                                             >
                                                                   <span>
                                                                         {productInfo?.name} - ${product.salePrice} (
@@ -421,7 +358,7 @@ function CreateFlashSaleModal({ onClose, onCreate }: CreateFlashSaleModalProps) 
                                                                   <button
                                                                         type="button"
                                                                         onClick={() => removeProduct(index)}
-                                                                        className="text-(--data-danger)] hover:underline text-xs font-bold"
+                                                                        className="text-(--data-danger) hover:underline text-xs font-bold"
                                                                   >
                                                                         REMOVE
                                                                   </button>
