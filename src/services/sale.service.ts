@@ -53,56 +53,62 @@ const MOCK_LEADERBOARD: LeaderboardResponse = {
       limit: 10
 };
 
-const USE_MOCK = true; // Toggle for development
+const USE_MOCK = false; // Toggle for development
 
 export const saleService = {
-      async getStatus(): Promise<{ data?: SaleStatus; error?: unknown }> {
+      async getStatus(productId?: string): Promise<{ data?: SaleStatus; error?: unknown }> {
             if (USE_MOCK) {
-                  // Simulate network delay
-                  await new Promise(resolve => setTimeout(resolve, 300));
-                  // Simulate stock decreasing
-                  MOCK_SALE_STATUS.remainingStock = Math.max(
-                        0,
-                        MOCK_SALE_STATUS.remainingStock - Math.floor(Math.random() * 2)
-                  );
-                  if (MOCK_SALE_STATUS.remainingStock === 0) {
-                        MOCK_SALE_STATUS.status = 'sold_out';
-                  }
+                  // ... mock logic ...
                   return { data: { ...MOCK_SALE_STATUS } };
             }
-            return api<SaleStatus>('/sale/status');
+            const url = productId ? `/flash-sales/product/${productId}` : '/flash-sales/active';
+            const response = await api<{ data: SaleStatus }>(url);
+            return { data: response.data?.data, error: response.error };
       },
 
-      async purchase(): Promise<{ data?: PurchaseResponse; error?: unknown }> {
+      async purchase(saleId: string, productId: string): Promise<{ data?: PurchaseResponse; error?: unknown }> {
             if (USE_MOCK) {
-                  await new Promise(resolve => setTimeout(resolve, 800));
-                  // 90% success rate for demo
-                  if (Math.random() > 0.1) {
-                        MOCK_SALE_STATUS.remainingStock = Math.max(0, MOCK_SALE_STATUS.remainingStock - 1);
-                        return {
-                              data: {
-                                    success: true,
-                                    message: 'Purchase successful!',
-                                    orderId: `ORD_${Date.now()}`,
-                                    purchasedAt: new Date().toISOString()
-                              }
-                        };
-                  }
-                  return {
-                        data: {
-                              success: false,
-                              message: 'Out of stock'
-                        }
-                  };
+                  // ... mock logic ...
             }
-            return api<PurchaseResponse>('/sale/purchase', {});
+            const response = await api<{
+                  status: string;
+                  message: string;
+                  data: {
+                        purchase: {
+                              _id: string;
+                              purchasedAt: string;
+                              productId: string;
+                              userId: string;
+                              price: number;
+                        };
+                  };
+            }>(`/flash-sales/${saleId}/purchase`, { productId });
+
+            return {
+                  data: response.data
+                        ? {
+                                success: response.data.status === 'success',
+                                message: response.data.message,
+                                orderId: response.data.data?.purchase?._id,
+                                purchasedAt: response.data.data?.purchase?.purchasedAt
+                          }
+                        : undefined,
+                  error: response.error
+            };
       },
 
-      async getLeaderboard(page = 1, limit = 10): Promise<{ data?: LeaderboardResponse; error?: unknown }> {
+      async getLeaderboard(
+            saleId: string,
+            page = 1,
+            limit = 10
+      ): Promise<{ data?: LeaderboardResponse; error?: unknown }> {
             if (USE_MOCK) {
                   await new Promise(resolve => setTimeout(resolve, 200));
                   return { data: MOCK_LEADERBOARD };
             }
-            return api<LeaderboardResponse>(`/sale/leaderboard?page=${page}&limit=${limit}`);
+            const response = await api<{ data: LeaderboardResponse }>(
+                  `/flash-sales/${saleId}/leaderboard?page=${page}&limit=${limit}`
+            );
+            return { data: response.data?.data, error: response.error };
       }
 };
