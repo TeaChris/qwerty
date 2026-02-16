@@ -1,14 +1,14 @@
 import { toast } from 'sonner';
 import { useState, useEffect, useCallback } from 'react';
 
-import { getFlashSales, createFlashSale, activateFlashSale, deactivateFlashSale } from '../services/sales.service';
-import { useAuthStore } from '../stores/auth.store';
-import type { FlashSale, CreateFlashSaleRequest } from '../types/sales';
+import { getFlashSales, createFlashSale, activateFlashSale, deactivateFlashSale } from '../services';
+import type { FlashSale, CreateFlashSaleRequest } from '../types';
+import { useAuthStore } from '../stores';
 
 export const useAdminFlashSales = () => {
       const { user } = useAuthStore();
+      const [loadingSales, setLoadingSales] = useState<boolean>(true);
       const [flashSales, setFlashSales] = useState<FlashSale[]>([]);
-      const [loadingSales, setLoadingSales] = useState(true);
       const [statusFilter, setStatusFilter] = useState<string>('');
 
       const fetchFlashSales = useCallback(
@@ -86,12 +86,12 @@ export const useAdminFlashSales = () => {
 
       return {
             flashSales,
-            loadingSales,
             statusFilter,
-            setStatusFilter,
-            fetchFlashSales,
-            handleCreateFlashSale,
+            loadingSales,
             handleActivate,
-            handleDeactivate
+            fetchFlashSales,
+            setStatusFilter,
+            handleDeactivate,
+            handleCreateFlashSale
       };
 };
