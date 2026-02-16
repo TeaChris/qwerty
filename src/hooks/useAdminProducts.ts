@@ -1,15 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
-import { useAuthStore } from '../stores/auth.store';
-import { getProducts, createProduct, deleteProduct } from '../services/products.service';
-import type { Product, CreateProductRequest } from '../types/products';
+import { useState, useEffect, useCallback } from 'react';
+
+import { useAuthStore } from '../stores';
+import type { Product, CreateProductRequest } from '../types';
+import { getProducts, createProduct, deleteProduct } from '../services';
 
 export const useAdminProducts = () => {
       const { user } = useAuthStore();
+      const [page, setPage] = useState<number>(1);
+      const [total, setTotal] = useState<number>(0);
       const [products, setProducts] = useState<Product[]>([]);
-      const [loadingProducts, setLoadingProducts] = useState(true);
-      const [page, setPage] = useState(1);
-      const [total, setTotal] = useState(0);
+      const [loadingProducts, setLoadingProducts] = useState<boolean>(true);
 
       const fetchProducts = useCallback(
             async (showLoading = true) => {
@@ -76,12 +77,12 @@ export const useAdminProducts = () => {
       };
 
       return {
-            products,
-            loadingProducts,
             page,
-            setPage,
             total,
+            setPage,
+            products,
             fetchProducts,
+            loadingProducts,
             handleCreateProduct,
             handleDeleteProduct
       };
