@@ -1,10 +1,10 @@
-import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
 import { useState } from 'react';
-import { useAuthStore } from '../../stores/auth.store';
-import { AdminHeader } from '../../components/admin/admin.header';
-import { LoadingScreen } from '../../components';
+import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
+
+import { useAuthStore } from '../../stores';
 import { useAdminProducts } from '../../hooks';
-import type { CreateProductRequest } from '../../types/products';
+import type { CreateProductRequest } from '../../types';
+import { LoadingScreen, AdminHeader } from '../../components';
 
 export const Route = createLazyFileRoute('/admin/products')({
       component: AdminProducts
