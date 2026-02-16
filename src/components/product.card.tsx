@@ -15,10 +15,10 @@ export const ProductCard: FC<ProductCardProps> = ({ product }) => {
             <Link
                   to="/products/$productId"
                   params={{ productId: _id }}
-                  className="group relative bg-(--bg-elevated) border-2 border-(--border-default) hover:border-(--accent-primary) transition-all duration-300 flex flex-col h-full"
+                  className="group relative inline-block w-full break-inside-avoid mb-6 bg-(--bg-elevated) border-2 border-(--border-default) hover:border-(--accent-primary) transition-all duration-300"
             >
                   {/* Image Container */}
-                  <div className="relative aspect-square overflow-hidden bg-black/50 border-b-2 border-(--border-default) group-hover:border-(--accent-primary) transition-colors">
+                  <div className="relative overflow-hidden bg-black/50 border-b-2 border-(--border-default) group-hover:border-(--accent-primary) transition-colors">
                         <img
                               src={imageUrl}
                               alt={name}
