@@ -1,8 +1,9 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useAuth } from '../../hooks/useAuth';
+import { useForm } from 'react-hook-form';
 import { Link } from '@tanstack/react-router';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { useAuth } from '../../hooks';
 
 const loginSchema = z.object({
       email: z.string().min(1, 'Email is required').email('Invalid email address'),
