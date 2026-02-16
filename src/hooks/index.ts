@@ -1,4 +1,5 @@
 export { useAdminFlashSales } from './useAdminFlashSales';
+export { useFlashSaleForm } from './useFlashSaleForm';
 export { useAdminProducts } from './useAdminProducts';
 export { useLeaderboard } from './useLeaderboard';
 export { useAdminStats } from './useAdminStats';
