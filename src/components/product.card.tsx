@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { Link } from '@tanstack/react-router';
+
 import type { Product } from '../types';
 
 interface ProductCardProps {
