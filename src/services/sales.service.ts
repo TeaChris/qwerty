@@ -16,20 +16,13 @@ export const getActiveFlashSale = async () => {
 };
 
 export const createFlashSale = async (data: CreateFlashSaleRequest) => {
-      return api<{ status: string; message: string; data: { flashSale: FlashSale } }>('/flash-sales', {
-            method: 'POST',
-            body: data
-      });
+      return api<{ status: string; message: string; data: { flashSale: FlashSale } }>('/flash-sales', data);
 };
 
 export const activateFlashSale = async (id: string) => {
-      return api<{ status: string; message: string }>(`/flash-sales/${id}/activate`, {
-            method: 'PATCH'
-      });
+      return api<{ status: string; message: string }>(`/flash-sales/${id}/activate`, {}, 'PATCH');
 };
 
 export const deactivateFlashSale = async (id: string) => {
-      return api<{ status: string; message: string }>(`/flash-sales/${id}/deactivate`, {
-            method: 'PATCH'
-      });
+      return api<{ status: string; message: string }>(`/flash-sales/${id}/deactivate`, {}, 'PATCH');
 };
