@@ -29,4 +29,5 @@ export interface CreateFlashSaleRequest {
       startTime: string;
       endTime: string;
       duration: number;
+      [key: string]: unknown;
 }
