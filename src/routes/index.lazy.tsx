@@ -1,6 +1,7 @@
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
 
 import { UserDropdown, LiveBadge, ProductGrid } from '../components';
+import { FlashSaleSection } from '../components/flash-sale';
 import { useAuthStore } from '../stores';
 import { useAuth } from '../hooks';
 
@@ -83,6 +84,11 @@ function IndexComponent() {
                                     </div>
                               </div>
                         )}
+
+                        {/* Flash Sales Section */}
+                        <div className="animate-fade-in-up stagger-2">
+                              <FlashSaleSection />
+                        </div>
 
                         {/* Product Grid */}
                         <div className="animate-fade-in-up stagger-3">
