@@ -24,28 +24,11 @@ export const FlashSaleSection: FC = () => {
                         const activeSales = activeResponse.data?.data.flashSales || [];
                         const scheduledSales = scheduledResponse.data?.data.flashSales || [];
 
-                        console.log('🔍 Flash Sales Debug:');
-                        console.log('  Active sales fetched:', activeSales.length);
-                        console.log('  Scheduled sales fetched:', scheduledSales.length);
-                        console.log('  Active response:', activeResponse);
-                        console.log('  Scheduled response:', scheduledResponse);
-
                         // Combine and sort: active first, then scheduled by start time
                         const combined = [...activeSales, ...scheduledSales].sort((a, b) => {
                               if (a.status === 'active' && b.status !== 'active') return -1;
                               if (a.status !== 'active' && b.status === 'active') return 1;
                               return new Date(a.startTime).getTime() - new Date(b.startTime).getTime();
-                        });
-
-                        console.log('  Combined flash sales:', combined.length);
-                        combined.forEach((sale, idx) => {
-                              console.log(`  Sale ${idx + 1}:`, {
-                                    title: sale.title,
-                                    status: sale.status,
-                                    startTime: sale.startTime,
-                                    endTime: sale.endTime,
-                                    currentTime: new Date().toISOString()
-                              });
                         });
 
                         setFlashSales(combined);
