@@ -6,3 +6,5 @@ export * from './stock.indicator';
 export * from './leaderboard.item';
 export * from './sale.status.badge';
 export * from './flash.sale.dashboard';
+export * from './flash.sale.card';
+export * from './flash.sale.section';
