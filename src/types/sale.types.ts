@@ -7,6 +7,7 @@ export interface SaleStatus {
       productId: string;
       productName: string;
       productImage: string;
+      saleName?: string; // Flash sale title/name
       status: SaleStatusType;
       startsAt: string;
       endsAt: string;
