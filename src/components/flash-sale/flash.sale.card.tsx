@@ -22,16 +22,6 @@ export const FlashSaleCard: FC<FlashSaleCardProps> = ({ flashSale, product }) =>
       const isActive = flashSale.status === 'active' && now >= startTime && now <= endTime;
       const isScheduled = flashSale.status === 'scheduled' && now < startTime;
 
-      console.log(`📦 FlashSaleCard for "${flashSale.title}":`, {
-            status: flashSale.status,
-            isActive,
-            isScheduled,
-            now: now.toISOString(),
-            startTime: startTime.toISOString(),
-            endTime: endTime.toISOString(),
-            willRender: isActive || isScheduled
-      });
-
       // Countdown for active sales (time until end)
       const timeRemaining = useCountdown(isActive ? flashSale.endTime : null);
 
@@ -40,7 +30,16 @@ export const FlashSaleCard: FC<FlashSaleCardProps> = ({ flashSale, product }) =>
 
       // Get first product for display (flash sales can have multiple products, but we show the first)
       const firstProduct = flashSale.products[0];
-      const productId = firstProduct?.productId;
+
+      // productId could be a string ID or a populated product object
+      const rawProductId = firstProduct?.productId;
+      const productIdString =
+            typeof rawProductId === 'string'
+                  ? rawProductId
+                  : typeof rawProductId === 'object' && rawProductId !== null && '_id' in rawProductId
+                    ? (rawProductId as { _id: string })._id
+                    : '';
+
       const productName = product?.name || 'Flash Sale Product';
       const productImage = product?.images?.[0] || 'https://via.placeholder.com/400x400?text=FLASH+SALE';
       const salePrice = firstProduct?.salePrice || 0;
@@ -53,7 +52,7 @@ export const FlashSaleCard: FC<FlashSaleCardProps> = ({ flashSale, product }) =>
       return (
             <Link
                   to="/products/$productId"
-                  params={{ productId: productId as string }}
+                  params={{ productId: productIdString }}
                   className="group relative inline-block w-full break-inside-avoid mb-6 bg-(--bg-elevated) border-2 border-(--border-default) hover:border-(--accent-primary) transition-all duration-300"
             >
                   {/* Status Badge - Top Corner */}
