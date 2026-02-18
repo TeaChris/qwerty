@@ -3,6 +3,7 @@ import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
 
 import { useAuthStore } from '../../stores';
 import { AdminHeader, LoadingScreen } from '../../components';
+import { SaleLogsModal } from '../../components/admin/SaleLogsModal';
 import { useAdminFlashSales, useFlashSaleForm } from '../../hooks';
 import type { CreateFlashSaleRequest, FlashSale } from '../../types';
 
@@ -13,6 +14,7 @@ export const Route = createLazyFileRoute('/admin/flash-sales')({
 function AdminFlashSales() {
       const { user, isLoading: isAuthLoading } = useAuthStore();
       const [showCreateModal, setShowCreateModal] = useState(false);
+      const [viewLogsSale, setViewLogsSale] = useState<{ id: string; title: string } | null>(null);
       const {
             flashSales,
             loadingSales,
@@ -119,6 +121,7 @@ function AdminFlashSales() {
                                                 sale={sale}
                                                 onActivate={handleActivate}
                                                 onDeactivate={handleDeactivate}
+                                                onViewLogs={(id, title) => setViewLogsSale({ id, title })}
                                           />
                                     ))}
                               </div>
@@ -129,6 +132,15 @@ function AdminFlashSales() {
                   {showCreateModal && (
                         <CreateFlashSaleModal onClose={() => setShowCreateModal(false)} onCreate={onCreateSuccess} />
                   )}
+
+                  {/* Logs Modal */}
+                  {viewLogsSale && (
+                        <SaleLogsModal
+                              saleId={viewLogsSale.id}
+                              saleTitle={viewLogsSale.title}
+                              onClose={() => setViewLogsSale(null)}
+                        />
+                  )}
             </div>
       );
 }
@@ -138,9 +150,10 @@ interface FlashSaleCardProps {
       sale: FlashSale;
       onActivate: (id: string) => void;
       onDeactivate: (id: string) => void;
+      onViewLogs: (id: string, title: string) => void;
 }
 
-function FlashSaleCard({ sale, onActivate, onDeactivate }: FlashSaleCardProps) {
+function FlashSaleCard({ sale, onActivate, onDeactivate, onViewLogs }: FlashSaleCardProps) {
       const statusColors = {
             ended: 'var(--text-muted)',
             active: 'var(--data-success)',
@@ -183,6 +196,14 @@ function FlashSaleCard({ sale, onActivate, onDeactivate }: FlashSaleCardProps) {
                                           className="px-3 py-1 bg-(--data-danger) text-white text-xs font-bold hover:opacity-90"
                                     >
                                           DEACTIVATE
+                                    </button>
+                              )}
+                              {sale.status === 'ended' && (
+                                    <button
+                                          onClick={() => onViewLogs(sale._id, sale.title)}
+                                          className="px-3 py-1 bg-(--accent-primary) text-black text-xs font-bold hover:bg-white transition-colors"
+                                    >
+                                          VIEW LOGS
                                     </button>
                               )}
                         </div>
