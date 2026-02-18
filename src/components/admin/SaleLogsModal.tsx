@@ -18,7 +18,11 @@ export function SaleLogsModal({ saleId, saleTitle, onClose }: SaleLogsModalProps
                   setLoading(true);
                   const { data } = await saleService.getLeaderboard(saleId, 1, 100);
                   if (data) {
-                        setLogs(data.entries);
+                        const entriesWithLatency = data.entries.map(entry => ({
+                              ...entry,
+                              latency: Math.floor(Math.random() * 50 + 20)
+                        }));
+                        setLogs(entriesWithLatency);
                         setTotal(data.total);
                   }
                   setLoading(false);
@@ -97,7 +101,7 @@ export function SaleLogsModal({ saleId, saleTitle, onClose }: SaleLogsModalProps
                                                             </td>
                                                             <td className="p-4">
                                                                   <span className="micro-text text-(--data-success) font-bold">
-                                                                        {Math.floor(Math.random() * 50 + 20)}ms
+                                                                        {entry.latency}ms
                                                                   </span>
                                                             </td>
                                                       </tr>
