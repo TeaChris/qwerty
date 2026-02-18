@@ -29,6 +29,7 @@ export interface LeaderboardEntry {
       userId: string;
       username: string;
       purchasedAt: string;
+      latency?: number;
 }
 
 export interface LeaderboardResponse {
