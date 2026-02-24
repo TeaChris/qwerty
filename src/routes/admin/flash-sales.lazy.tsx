@@ -91,6 +91,16 @@ function AdminFlashSales() {
                                     >
                                           ENDED
                                     </button>
+                                    <button
+                                          onClick={() => setStatusFilter('cancelled')}
+                                          className={`px-4 py-2 font-bold text-sm ${
+                                                statusFilter === 'cancelled'
+                                                      ? 'bg-(--accent-primary) text-white'
+                                                      : 'bg-(--bg-elevated) border-2 border-(--border-default) text-(--text-secondary) hover:border-(--accent-primary)'
+                                          } transition-colors`}
+                                    >
+                                          CANCELLED
+                                    </button>
                               </div>
                         </div>
 
