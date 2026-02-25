@@ -1,8 +1,10 @@
 import { useEffect, useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
+
+import { useCountdown } from './useCountdown';
+import { useAuthStore } from '../stores/auth.store';
 import { useSaleStore } from '../stores/sale.store';
 import { saleService } from '../services/sale.service';
-import { useCountdown } from './useCountdown';
 import { socket, connectSocket, disconnectSocket } from '../lib/socket';
 import type { SaleStatus, LeaderboardEntry } from '../types/sale.types';
 
@@ -65,6 +67,8 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             }
       }, [status?._id]);
 
+      const { user } = useAuthStore();
+
       // Initial fetch and Socket.io setup
       useEffect(() => {
             fetchStatus();
@@ -73,6 +77,10 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
 
             if (status?._id) {
                   socket.emit('join_sale', status._id);
+            }
+
+            if (user?.id) {
+                  socket.emit('join_user_room', `user_${user.id}`);
             }
 
             const handleStockUpdate = ({
@@ -104,15 +112,30 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
                   setLeaderboardTotal(prev => prev + 1);
             };
 
+            const handlePaymentSuccess = () => {
+                  toast.success('Payment finalized successfully! 🎉');
+                  recordPurchase();
+                  fetchStatus();
+            };
+
+            const handlePaymentFailed = ({ reason }: { reason: string }) => {
+                  toast.error(`Payment failed: ${reason}`);
+                  fetchStatus();
+            };
+
             socket.on('stock_update', handleStockUpdate);
             socket.on('new_purchase', handleNewPurchase);
+            socket.on('payment_success', handlePaymentSuccess);
+            socket.on('payment_failed', handlePaymentFailed);
 
             return () => {
                   socket.off('stock_update', handleStockUpdate);
                   socket.off('new_purchase', handleNewPurchase);
+                  socket.off('payment_success', handlePaymentSuccess);
+                  socket.off('payment_failed', handlePaymentFailed);
                   disconnectSocket();
             };
-      }, [fetchStatus, fetchLeaderboard, setStatus, status]);
+      }, [fetchStatus, fetchLeaderboard, setStatus, status, user?.id, recordPurchase]);
 
       // Purchase handler
       const purchase = useCallback(async (): Promise<boolean> => {
@@ -129,18 +152,22 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             try {
                   const { data, error } = await saleService.purchase(status?._id || '', status?.productId || '');
 
-                  if (data?.success) {
-                        recordPurchase();
-                        toast.success('Purchase successful! 🎉');
+                  if (data?.success && data.authorizationUrl) {
+                        toast.info('Secure payment node initialized. Redirecting...', {
+                              description: 'Wait for the encrypted tunnel to establish.'
+                        });
 
-                        // Refresh status to get latest stock
-                        await fetchStatus();
+                        // Redirect to Paystack
+                        window.location.href = data.authorizationUrl;
                         return true;
                   } else {
                         // Revert optimistic update on failure
                         await fetchStatus();
 
-                        const message = data?.message || (error as { message?: string })?.message || 'Purchase failed';
+                        const message =
+                              data?.message ||
+                              (error as { message?: string })?.message ||
+                              'Acquisition protocol failed';
                         toast.error(message);
                         return false;
                   }
@@ -152,7 +179,7 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             } finally {
                   setPurchasing(false);
             }
-      }, [checkCanPurchase, setPurchasing, decrementStock, recordPurchase, fetchStatus]);
+      }, [checkCanPurchase, setPurchasing, decrementStock, fetchStatus, status?._id, status?.productId]);
 
       return {
             status,
