@@ -12,6 +12,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProductsProductIdRouteImport } from './routes/products/$productId'
+import { Route as PaymentCallbackRouteImport } from './routes/payment/callback'
 
 const VerifyEmailLazyRouteImport = createFileRoute('/verify-email')()
 const RegisterLazyRouteImport = createFileRoute('/register')()
@@ -75,6 +76,13 @@ const ProductsProductIdRoute = ProductsProductIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/products/$productId.lazy').then((d) => d.Route),
 )
+const PaymentCallbackRoute = PaymentCallbackRouteImport.update({
+  id: '/payment/callback',
+  path: '/payment/callback',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/payment/callback.lazy').then((d) => d.Route),
+)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
@@ -82,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/verify-email': typeof VerifyEmailLazyRoute
+  '/payment/callback': typeof PaymentCallbackRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/admin/dashboard': typeof AdminDashboardLazyRoute
   '/admin/flash-sales': typeof AdminFlashSalesLazyRoute
@@ -93,6 +102,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/verify-email': typeof VerifyEmailLazyRoute
+  '/payment/callback': typeof PaymentCallbackRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/admin/dashboard': typeof AdminDashboardLazyRoute
   '/admin/flash-sales': typeof AdminFlashSalesLazyRoute
@@ -105,6 +115,7 @@ export interface FileRoutesById {
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
   '/verify-email': typeof VerifyEmailLazyRoute
+  '/payment/callback': typeof PaymentCallbackRoute
   '/products/$productId': typeof ProductsProductIdRoute
   '/admin/dashboard': typeof AdminDashboardLazyRoute
   '/admin/flash-sales': typeof AdminFlashSalesLazyRoute
@@ -118,6 +129,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/verify-email'
+    | '/payment/callback'
     | '/products/$productId'
     | '/admin/dashboard'
     | '/admin/flash-sales'
@@ -129,6 +141,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/verify-email'
+    | '/payment/callback'
     | '/products/$productId'
     | '/admin/dashboard'
     | '/admin/flash-sales'
@@ -140,6 +153,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/verify-email'
+    | '/payment/callback'
     | '/products/$productId'
     | '/admin/dashboard'
     | '/admin/flash-sales'
@@ -152,6 +166,7 @@ export interface RootRouteChildren {
   LoginLazyRoute: typeof LoginLazyRoute
   RegisterLazyRoute: typeof RegisterLazyRoute
   VerifyEmailLazyRoute: typeof VerifyEmailLazyRoute
+  PaymentCallbackRoute: typeof PaymentCallbackRoute
   ProductsProductIdRoute: typeof ProductsProductIdRoute
   AdminDashboardLazyRoute: typeof AdminDashboardLazyRoute
   AdminFlashSalesLazyRoute: typeof AdminFlashSalesLazyRoute
@@ -223,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/payment/callback': {
+      id: '/payment/callback'
+      path: '/payment/callback'
+      fullPath: '/payment/callback'
+      preLoaderRoute: typeof PaymentCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -232,6 +254,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginLazyRoute: LoginLazyRoute,
   RegisterLazyRoute: RegisterLazyRoute,
   VerifyEmailLazyRoute: VerifyEmailLazyRoute,
+  PaymentCallbackRoute: PaymentCallbackRoute,
   ProductsProductIdRoute: ProductsProductIdRoute,
   AdminDashboardLazyRoute: AdminDashboardLazyRoute,
   AdminFlashSalesLazyRoute: AdminFlashSalesLazyRoute,
