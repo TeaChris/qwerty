@@ -69,10 +69,18 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
 
       const { user } = useAuthStore();
 
-      // Initial fetch and Socket.io setup
+      // Stable refs for socket handlers to avoid stale closures
+      const statusRef = useRef(status);
+      statusRef.current = status;
+
+      // Initial data fetch (runs once on mount / productId change)
       useEffect(() => {
             fetchStatus();
             fetchLeaderboard();
+      }, [fetchStatus, fetchLeaderboard]);
+
+      // Socket.io connection and event handlers (re-runs when sale or user changes)
+      useEffect(() => {
             connectSocket();
 
             if (status?._id) {
@@ -90,8 +98,9 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
                   productId: string;
                   remainingStock: number;
             }) => {
-                  if (status?.productId === productId) {
-                        setStatus({ ...status, remainingStock });
+                  const current = useSaleStore.getState().status;
+                  if (current?.productId === productId) {
+                        setStatus({ ...current, remainingStock });
                   }
             };
 
@@ -135,7 +144,7 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
                   socket.off('payment_failed', handlePaymentFailed);
                   disconnectSocket();
             };
-      }, [fetchStatus, fetchLeaderboard, setStatus, status, user?.id, recordPurchase]);
+      }, [status?._id, user?.id, setStatus, recordPurchase, fetchStatus]);
 
       // Purchase handler
       const purchase = useCallback(async (): Promise<boolean> => {
