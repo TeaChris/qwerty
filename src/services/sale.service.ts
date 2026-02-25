@@ -76,11 +76,13 @@ export const saleService = {
                   data: {
                         purchase: {
                               _id: string;
-                              purchasedAt: string;
                               productId: string;
                               userId: string;
                               price: number;
+                              status: string;
+                              paymentReference: string;
                         };
+                        authorization_url: string;
                   };
             }>(`/flash-sales/${saleId}/purchase`, { productId });
 
@@ -90,7 +92,8 @@ export const saleService = {
                                 success: response.data.status === 'success',
                                 message: response.data.message,
                                 orderId: response.data.data?.purchase?._id,
-                                purchasedAt: response.data.data?.purchase?.purchasedAt
+                                authorizationUrl: response.data.data?.authorization_url,
+                                paymentReference: response.data.data?.purchase?.paymentReference
                           }
                         : undefined,
                   error: response.error
