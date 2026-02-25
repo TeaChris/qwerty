@@ -21,7 +21,8 @@ export interface PurchaseResponse {
       success: boolean;
       message: string;
       orderId?: string;
-      purchasedAt?: string;
+      authorizationUrl?: string;
+      paymentReference?: string;
 }
 
 export interface LeaderboardEntry {
