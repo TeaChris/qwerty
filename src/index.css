@@ -288,19 +288,29 @@ body::after {
     }
 }
 
+/* Floating Animation */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Tech Grid Background Animation */
+@keyframes tech-grid-scroll {
+    from { background-position: 0 0; }
+    to { background-position: 0 40px; }
+}
+
+/* Premium Radial Glow */
+@keyframes pulse-glow-premium {
+    0%, 100% { opacity: 0.3; transform: scale(1); filter: blur(40px); }
+    50% { opacity: 0.6; transform: scale(1.1); filter: blur(60px); }
+}
+
 /* Rotate Bounce */
 @keyframes rotate-bounce {
-    0% {
-        transform: rotate(0deg) scale(1);
-    }
-
-    50% {
-        transform: rotate(180deg) scale(1.1);
-    }
-
-    100% {
-        transform: rotate(360deg) scale(1);
-    }
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
 }
 
 /* ===== Animation Classes ===== */
@@ -347,6 +357,18 @@ body::after {
 
 .animate-rotate-bounce {
     animation: rotate-bounce 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.animate-tech-grid {
+    animation: tech-grid-scroll 2s linear infinite;
+}
+
+.animate-glow-premium {
+    animation: pulse-glow-premium 4s ease-in-out infinite;
 }
 
 /* Stagger delays for choreography */
@@ -427,6 +449,13 @@ body::after {
     font-family: 'JetBrains Mono', 'Courier New', monospace;
     font-variant-numeric: tabular-nums;
     letter-spacing: -0.02em;
+}
+
+/* Tech Grid Utility */
+.bg-tech-grid {
+    background-image: linear-gradient(var(--border-default) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--border-default) 1px, transparent 1px);
+    background-size: 40px 40px;
 }
 
 /* Uppercase Micro Text */
