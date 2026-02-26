@@ -6,15 +6,15 @@ import { useCountdown } from '../../hooks';
 
 interface FlashSaleCardProps {
       flashSale: FlashSale;
-      // Populated product details from backend
-      product?: {
+      // Populated asset details from backend
+      asset?: {
             _id: string;
             name: string;
             images: string[];
       };
 }
 
-export const FlashSaleCard: FC<FlashSaleCardProps> = ({ flashSale, product }) => {
+export const FlashSaleCard: FC<FlashSaleCardProps> = ({ flashSale, asset }) => {
       const now = new Date();
       const startTime = new Date(flashSale.startTime);
       const endTime = new Date(flashSale.endTime);
@@ -28,31 +28,31 @@ export const FlashSaleCard: FC<FlashSaleCardProps> = ({ flashSale, product }) =>
       // Countdown for scheduled sales (time until start)
       const timeUntilStart = useCountdown(isScheduled ? flashSale.startTime : null);
 
-      // Get first product for display (flash sales can have multiple products, but we show the first)
-      const firstProduct = flashSale.products[0];
+      // Get first asset for display (flash sales can have multiple assets, but we show the first)
+      const firstAsset = flashSale.assets[0];
 
-      // productId could be a string ID or a populated product object
-      const rawProductId = firstProduct?.productId;
-      const productIdString =
-            typeof rawProductId === 'string'
-                  ? rawProductId
-                  : typeof rawProductId === 'object' && rawProductId !== null && '_id' in rawProductId
-                    ? (rawProductId as { _id: string })._id
+      // assetId could be a string ID or a populated asset object
+      const rawAssetId = firstAsset?.assetId;
+      const assetIdString =
+            typeof rawAssetId === 'string'
+                  ? rawAssetId
+                  : typeof rawAssetId === 'object' && rawAssetId !== null && '_id' in rawAssetId
+                    ? (rawAssetId as { _id: string })._id
                     : '';
 
-      const productName = product?.name || 'Flash Sale Product';
-      const productImage = product?.images?.[0] || 'https://via.placeholder.com/400x400?text=FLASH+SALE';
-      const salePrice = firstProduct?.salePrice || 0;
-      const stockRemaining = firstProduct?.stockRemaining || 0;
-      const stockLimit = firstProduct?.stockLimit || 0;
+      const assetName = asset?.name || 'Flash Sale Asset';
+      const assetImage = asset?.images?.[0] || 'https://via.placeholder.com/400x400?text=FLASH+SALE';
+      const salePrice = firstAsset?.salePrice || 0;
+      const stockRemaining = firstAsset?.stockRemaining || 0;
+      const stockLimit = firstAsset?.stockLimit || 0;
       const stockPercentage = stockLimit > 0 ? (stockRemaining / stockLimit) * 100 : 0;
 
       if (!isActive && !isScheduled) return null;
 
       return (
             <Link
-                  to="/products/$productId"
-                  params={{ productId: productIdString }}
+                  to="/assets/$assetId"
+                  params={{ assetId: assetIdString }}
                   className="group relative inline-block w-full break-inside-avoid mb-6 bg-(--bg-elevated) border-2 border-(--border-default) hover:border-(--accent-primary) transition-all duration-300"
             >
                   {/* Status Badge - Top Corner */}
@@ -71,8 +71,8 @@ export const FlashSaleCard: FC<FlashSaleCardProps> = ({ flashSale, product }) =>
                   {/* Image Container */}
                   <div className="relative overflow-hidden bg-black/50 border-b-2 border-(--border-default) group-hover:border-(--accent-primary) transition-colors aspect-square">
                         <img
-                              src={productImage}
-                              alt={productName}
+                              src={assetImage}
+                              alt={assetName}
                               className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-110"
                         />
 
@@ -89,9 +89,9 @@ export const FlashSaleCard: FC<FlashSaleCardProps> = ({ flashSale, product }) =>
 
                   {/* Content */}
                   <div className="p-5 space-y-4">
-                        {/* Product Name */}
+                        {/* Asset Name */}
                         <h3 className="text-lg font-black uppercase tracking-tighter leading-tight group-hover:text-(--accent-primary) transition-colors">
-                              {productName}
+                              {assetName}
                         </h3>
 
                         {/* Price */}
