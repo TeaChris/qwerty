@@ -59,7 +59,7 @@ function AdminDashboard() {
                         <div className="glass border-2 border-(--border-default)] p-6 mb-8">
                               <h2 className="text-lg font-black mb-4">QUICK ACTIONS</h2>
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <ActionButton label="Create Product" icon="➕" href="/admin/products" />
+                                    <ActionButton label="Create Asset" icon="➕" href="/admin/products" />
                                     <ActionButton label="New Flash Sale" icon="⚡" href="/admin/flash-sales" />
                                     <ActionButton label="View Stats" icon="📊" href="/admin/dashboard" />
                               </div>
