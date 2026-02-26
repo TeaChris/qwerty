@@ -20,7 +20,7 @@ interface UseFlashSaleResult {
       isLoading: boolean;
 }
 
-export function useFlashSale(productId?: string): UseFlashSaleResult {
+export function useFlashSale(assetId?: string): UseFlashSaleResult {
       const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
       const [leaderboardTotal, setLeaderboardTotal] = useState(0);
 
@@ -47,7 +47,7 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             if (isLoadingRef.current) return;
 
             isLoadingRef.current = true;
-            const { data, error } = await saleService.getStatus(productId);
+            const { data, error } = await saleService.getStatus(assetId);
             isLoadingRef.current = false;
 
             if (data) {
@@ -55,7 +55,7 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             } else if (error) {
                   console.error('Failed to fetch sale status:', error);
             }
-      }, [setStatus, productId]);
+      }, [setStatus, assetId]);
 
       // Fetch leaderboard
       const fetchLeaderboard = useCallback(async () => {
@@ -73,7 +73,7 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
       const statusRef = useRef(status);
       statusRef.current = status;
 
-      // Initial data fetch (runs once on mount / productId change)
+      // Initial data fetch (runs once on mount / assetId change)
       useEffect(() => {
             fetchStatus();
             fetchLeaderboard();
@@ -92,14 +92,14 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             }
 
             const handleStockUpdate = ({
-                  productId,
+                  assetId: updatedAssetId,
                   remainingStock
             }: {
-                  productId: string;
+                  assetId: string;
                   remainingStock: number;
             }) => {
                   const current = useSaleStore.getState().status;
-                  if (current?.productId === productId) {
+                  if (current?.assetId === updatedAssetId) {
                         setStatus({ ...current, remainingStock });
                   }
             };
@@ -159,7 +159,7 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             decrementStock();
 
             try {
-                  const { data, error } = await saleService.purchase(status?._id || '', status?.productId || '');
+                  const { data, error } = await saleService.purchase(status?._id || '', status?.assetId || '');
 
                   if (data?.success && data.authorizationUrl) {
                         toast.info('Secure payment node initialized. Redirecting...', {
@@ -188,7 +188,7 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             } finally {
                   setPurchasing(false);
             }
-      }, [checkCanPurchase, setPurchasing, decrementStock, fetchStatus, status?._id, status?.productId]);
+      }, [checkCanPurchase, setPurchasing, decrementStock, fetchStatus, status?._id, status?.assetId]);
 
       return {
             status,
