@@ -1,71 +1,71 @@
 import { toast } from 'sonner';
 import { useState, useEffect } from 'react';
 
-import type { Product } from '../types';
-import { getProducts } from '../services';
+import type { Asset } from '../types';
+import { getAssets } from '../services';
 import type { CreateFlashSaleRequest } from '../types';
 
 export const useFlashSaleForm = () => {
-      const [products, setProducts] = useState<Product[]>([]);
+      const [assets, setAssets] = useState<Asset[]>([]);
       const [formData, setFormData] = useState<CreateFlashSaleRequest>({
             title: '',
             description: '',
-            products: [],
+            assets: [],
             startTime: '',
             endTime: '',
             duration: 60
       });
-      const [selectedProduct, setSelectedProduct] = useState<string>('');
+      const [selectedAsset, setSelectedAsset] = useState<string>('');
       const [submitting, setSubmitting] = useState<boolean>(false);
       const [stockLimit, setStockLimit] = useState<number>(0);
       const [salePrice, setSalePrice] = useState<number>(0);
 
-      // Fetch products on mount
+      // Fetch assets on mount
       useEffect(() => {
-            const fetchProducts = async () => {
-                  const { data } = await getProducts(1, 100);
+            const fetchAssets = async () => {
+                  const { data } = await getAssets(1, 100);
                   if (data) {
-                        setProducts(data.data.products);
+                        setAssets(data.data.assets);
                   }
             };
-            fetchProducts();
+            fetchAssets();
       }, []);
 
-      const addProduct = () => {
-            if (!selectedProduct || salePrice <= 0 || stockLimit <= 0) {
-                  toast.error('Please fill in all product details');
+      const addAsset = () => {
+            if (!selectedAsset || salePrice <= 0 || stockLimit <= 0) {
+                  toast.error('Please fill in all asset details');
                   return;
             }
 
             setFormData(prev => ({
                   ...prev,
-                  products: [
-                        ...prev.products,
+                  assets: [
+                        ...prev.assets,
                         {
-                              productId: selectedProduct,
+                              assetId: selectedAsset,
                               salePrice,
                               stockLimit
                         }
                   ]
             }));
 
-            setSelectedProduct('');
+            setSelectedAsset('');
             setSalePrice(0);
             setStockLimit(0);
       };
 
-      const removeProduct = (index: number) => {
+      const removeAsset = (index: number) => {
             setFormData(prev => ({
                   ...prev,
-                  products: prev.products.filter((_, i) => i !== index)
+                  assets: prev.assets.filter((_, i) => i !== index)
             }));
       };
 
       const handleSubmit = async (e: React.FormEvent, onCreate: (data: CreateFlashSaleRequest) => Promise<boolean>) => {
             e.preventDefault();
 
-            if (formData.products.length === 0) {
-                  toast.error('Please add at least one product to the flash sale');
+            if (formData.assets.length === 0) {
+                  toast.error('Please add at least one asset to the flash sale');
                   return;
             }
 
@@ -77,7 +77,7 @@ export const useFlashSaleForm = () => {
                   setFormData({
                         title: '',
                         description: '',
-                        products: [],
+                        assets: [],
                         startTime: '',
                         endTime: '',
                         duration: 60
@@ -86,19 +86,19 @@ export const useFlashSaleForm = () => {
       };
 
       return {
-            products,
+            assets,
             formData,
             salePrice,
             stockLimit,
-            addProduct,
+            addAsset,
             submitting,
             setFormData,
             setSalePrice,
             handleSubmit,
             setStockLimit,
-            removeProduct,
+            removeAsset,
             setSubmitting,
-            selectedProduct,
-            setSelectedProduct
+            selectedAsset,
+            setSelectedAsset
       };
 };
