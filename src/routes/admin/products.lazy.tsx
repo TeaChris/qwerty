@@ -2,27 +2,26 @@ import { useState } from 'react';
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
 
 import { useAuthStore } from '../../stores';
-import { useAdminProducts } from '../../hooks';
-import type { CreateProductRequest } from '../../types';
+import { useAdminAssets } from '../../hooks';
+import type { CreateAssetRequest, AssetType } from '../../types';
 import { LoadingScreen, AdminHeader } from '../../components';
 
 export const Route = createLazyFileRoute('/admin/products')({
-      component: AdminProducts
+      component: AdminAssets
 });
 
-function AdminProducts() {
+function AdminAssets() {
       const { user, isLoading: isAuthLoading } = useAuthStore();
       const [showCreateModal, setShowCreateModal] = useState(false);
-      const { products, loadingProducts, page, setPage, total, handleCreateProduct, handleDeleteProduct } =
-            useAdminProducts();
+      const { assets, loadingAssets, page, setPage, total, handleCreateAsset, handleDeleteAsset } = useAdminAssets();
 
       // Redirect non-admin users
       if (!isAuthLoading && (!user || user.role !== 'ADMIN')) {
             return <Navigate to="/" />;
       }
 
-      const onCreateSuccess = async (productData: CreateProductRequest) => {
-            const success = await handleCreateProduct(productData);
+      const onCreateSuccess = async (assetData: CreateAssetRequest) => {
+            const success = await handleCreateAsset(assetData);
             if (success) {
                   setShowCreateModal(false);
             }
@@ -30,22 +29,22 @@ function AdminProducts() {
       };
 
       if (isAuthLoading) {
-            return <LoadingScreen message="Syncing Inventory Database" progress={30} />;
+            return <LoadingScreen message="Syncing Asset Database" progress={30} />;
       }
 
       return (
             <div className="min-h-screen bg-(--bg-canvas) text-(--text-primary)">
-                  <AdminHeader title="Product Management" subtitle="Create & Manage Products" />
+                  <AdminHeader title="Asset Management" subtitle="Create & Manage Assets" />
 
                   {/* Main Content */}
                   <main className="container mx-auto px-6 py-8">
-                        {/* Products Table */}
+                        {/* Assets Table */}
                         <div className="glass border-2 border-(--border-default) overflow-hidden">
                               <table className="w-full">
                                     <thead>
                                           <tr className="border-b-2 border-(--border-default) bg-(--bg-elevated)">
                                                 <th className="text-left p-4 micro-text text-xs text-(--text-muted)">
-                                                      PRODUCT
+                                                      ASSET
                                                 </th>
                                                 <th className="text-left p-4 micro-text text-xs text-(--text-muted)">
                                                       CATEGORY
@@ -65,63 +64,61 @@ function AdminProducts() {
                                           </tr>
                                     </thead>
                                     <tbody>
-                                          {loadingProducts ? (
+                                          {loadingAssets ? (
                                                 <tr>
                                                       <td colSpan={6} className="text-center py-12 text-(--text-muted)">
-                                                            Loading products...
+                                                            Loading assets...
                                                       </td>
                                                 </tr>
-                                          ) : products.length === 0 ? (
+                                          ) : assets.length === 0 ? (
                                                 <tr>
                                                       <td colSpan={6} className="text-center py-12 text-(--text-muted)">
-                                                            No products found. Create your first product to get started.
+                                                            No assets found. Create your first asset to get started.
                                                       </td>
                                                 </tr>
                                           ) : (
-                                                products.map(product => (
+                                                assets.map(asset => (
                                                       <tr
-                                                            key={product._id}
+                                                            key={asset._id}
                                                             className="border-b border-(--border-default) hover:bg-(--bg-hover) transition-colors"
                                                       >
                                                             <td className="p-4">
-                                                                  <div className="font-bold text-sm">
-                                                                        {product.name}
-                                                                  </div>
+                                                                  <div className="font-bold text-sm">{asset.name}</div>
                                                                   <div className="text-xs text-(--text-muted) truncate max-w-xs">
-                                                                        {product.description}
+                                                                        {asset.description}
                                                                   </div>
                                                             </td>
                                                             <td className="p-4 text-sm text-(--text-secondary)">
-                                                                  {product.category}
+                                                                  {asset.category}
                                                             </td>
                                                             <td className="p-4 font-bold mono-number">
-                                                                  ${product.price.toFixed(2)}
+                                                                  ${asset.price.toFixed(2)}
                                                             </td>
                                                             <td className="p-4 mono-number">
                                                                   <span
                                                                         className={
-                                                                              product.stock > 10
+                                                                              asset.stock > 10
                                                                                     ? 'text-(--data-success)'
                                                                                     : 'text-(--data-danger)'
                                                                         }
                                                                   >
-                                                                        {product.stock}
+                                                                        {asset.stock}
                                                                   </span>
                                                             </td>
                                                             <td className="p-4">
                                                                   <span
                                                                         className={`px-2 py-1 text-xs font-bold ${
-                                                                              product.isActive
+                                                                              asset.isActive
                                                                                     ? 'bg-(--data-success)'
                                                                                     : 'bg-(--text-muted)'
                                                                         } text-white`}
                                                                   >
-                                                                        {product.isActive ? 'ACTIVE' : 'INACTIVE'}
+                                                                        {asset.isActive ? 'ACTIVE' : 'INACTIVE'}
                                                                   </span>
                                                             </td>
                                                             <td className="p-4">
                                                                   <button
-                                                                        onClick={() => handleDeleteProduct(product._id)}
+                                                                        onClick={() => handleDeleteAsset(asset._id)}
                                                                         className="text-(--data-danger) hover:underline text-sm font-bold"
                                                                   >
                                                                         DELETE
@@ -160,25 +157,26 @@ function AdminProducts() {
 
                   {/* Create Modal */}
                   {showCreateModal && (
-                        <CreateProductModal onClose={() => setShowCreateModal(false)} onCreate={onCreateSuccess} />
+                        <CreateAssetModal onClose={() => setShowCreateModal(false)} onCreate={onCreateSuccess} />
                   )}
             </div>
       );
 }
 
-// Create Product Modal Component
-interface CreateProductModalProps {
+// Create Asset Modal Component
+interface CreateAssetModalProps {
       onClose: () => void;
-      onCreate: (data: CreateProductRequest) => Promise<boolean>;
+      onCreate: (data: CreateAssetRequest) => Promise<boolean>;
 }
 
-function CreateProductModal({ onClose, onCreate }: CreateProductModalProps) {
-      const [formData, setFormData] = useState<CreateProductRequest>({
+function CreateAssetModal({ onClose, onCreate }: CreateAssetModalProps) {
+      const [formData, setFormData] = useState<CreateAssetRequest>({
             name: '',
             description: '',
             price: 0,
             stock: 0,
             category: '',
+            assetType: 'event_pass' as AssetType,
             tags: []
       });
       const [submitting, setSubmitting] = useState(false);
@@ -189,27 +187,35 @@ function CreateProductModal({ onClose, onCreate }: CreateProductModalProps) {
             const success = await onCreate(formData);
             setSubmitting(false);
             if (success) {
-                  setFormData({ name: '', description: '', price: 0, stock: 0, category: '', tags: [] });
+                  setFormData({
+                        name: '',
+                        description: '',
+                        price: 0,
+                        stock: 0,
+                        category: '',
+                        assetType: 'event_pass' as AssetType,
+                        tags: []
+                  });
             }
       };
 
       return (
             <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
                   <div className="glass border-2 border-(--border-accent) p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-                        <h2 className="text-xl font-black mb-4">CREATE NEW PRODUCT</h2>
+                        <h2 className="text-xl font-black mb-4">CREATE NEW ASSET</h2>
 
                         <form onSubmit={handleSubmit} className="space-y-4">
                               <div>
                                     <label className="block micro-text text-xs text-(--text-muted) mb-2">
-                                          PRODUCT NAME *
+                                          ASSET NAME *
                                     </label>
                                     <input
                                           type="text"
                                           required
                                           value={formData.name}
                                           onChange={e => setFormData({ ...formData, name: e.target.value })}
-                                          className="w-full px-4 py-2 bg-(--bg-surface) border-2 border(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none"
-                                          placeholder="Gaming Laptop"
+                                          className="w-full px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none"
+                                          placeholder="Digital Event Pass"
                                     />
                               </div>
 
@@ -223,7 +229,7 @@ function CreateProductModal({ onClose, onCreate }: CreateProductModalProps) {
                                           onChange={e => setFormData({ ...formData, description: e.target.value })}
                                           rows={3}
                                           className="w-full px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none resize-none"
-                                          placeholder="High-performance gaming laptop with..."
+                                          placeholder="Premium digital asset with..."
                                     />
                               </div>
 
@@ -256,9 +262,28 @@ function CreateProductModal({ onClose, onCreate }: CreateProductModalProps) {
                                                 onChange={e =>
                                                       setFormData({ ...formData, stock: parseInt(e.target.value) })
                                                 }
-                                                className="w-full px-4 py-2 bg-(--bg-surface) border-2 border-[(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none"
+                                                className="w-full px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none"
                                           />
                                     </div>
+                              </div>
+
+                              <div>
+                                    <label className="block micro-text text-xs text-(--text-muted) mb-2">
+                                          ASSET TYPE *
+                                    </label>
+                                    <select
+                                          required
+                                          value={formData.assetType}
+                                          onChange={e =>
+                                                setFormData({ ...formData, assetType: e.target.value as AssetType })
+                                          }
+                                          className="w-full px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none"
+                                    >
+                                          <option value="event_pass">Event Pass</option>
+                                          <option value="identity_badge">Identity Badge</option>
+                                          <option value="smart_device">Smart Device</option>
+                                          <option value="intel_report">Intel Report</option>
+                                    </select>
                               </div>
 
                               <div>
@@ -293,7 +318,7 @@ function CreateProductModal({ onClose, onCreate }: CreateProductModalProps) {
                                           disabled={submitting}
                                           className="flex-1 px-4 py-2 bg-(--accent-primary) text-white font-bold hover:bg-(--accent-secondary) transition-colors disabled:opacity-50"
                                     >
-                                          {submitting ? 'CREATING...' : 'CREATE PRODUCT'}
+                                          {submitting ? 'CREATING...' : 'CREATE ASSET'}
                                     </button>
                               </div>
                         </form>
