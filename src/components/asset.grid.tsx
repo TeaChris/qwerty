@@ -1,0 +1,74 @@
+import { useEffect, useState, type FC } from 'react';
+
+import { Skeleton } from './ui';
+import type { Asset } from '../types';
+import { getAssets } from '../services';
+import { AssetCard } from './asset.card';
+
+export const AssetGrid: FC = () => {
+      const [assets, setAssets] = useState<Asset[]>([]);
+      const [isLoading, setIsLoading] = useState(true);
+      const [error, setError] = useState<string | null>(null);
+
+      useEffect(() => {
+            const fetchAssets = async () => {
+                  try {
+                        setIsLoading(true);
+                        const { data, error } = await getAssets(1, 12, { isActive: true });
+
+                        if (error) throw new Error('System link failure: Unable to fetch assets');
+                        if (data) setAssets(data.data.assets);
+                  } catch (err: unknown) {
+                        const message = err instanceof Error ? err.message : 'Unknown link failure';
+                        setError(message);
+                  } finally {
+                        setIsLoading(false);
+                  }
+            };
+
+            fetchAssets();
+      }, []);
+
+      if (error) {
+            return (
+                  <div className="p-8 border-2 border-(--data-danger) bg-(--data-danger)/10 text-(--data-danger) font-bold text-center uppercase tracking-widest">
+                        ⚠️ CRITICAL_ERROR: {error}
+                  </div>
+            );
+      }
+
+      return (
+            <section className="py-12">
+                  <div className="flex items-center justify-between mb-8 border-b-2 border-(--border-default) pb-4">
+                        <h2 className="text-2xl font-black uppercase tracking-tighter">AVAILABLE_ASSETS</h2>
+                        <div className="flex items-center gap-4 text-xs font-bold text-(--text-muted)">
+                              <span className="mono-number">[ {assets.length} ]</span>
+                              UNITS_ONLINE
+                        </div>
+                  </div>
+
+                  <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
+                        {isLoading ? (
+                              [0.8, 1.2, 1.0, 1.4].map((ratio, i) => (
+                                    <div
+                                          key={i}
+                                          className="break-inside-avoid mb-6 bg-(--bg-elevated) border-2 border-(--border-default) p-6 space-y-4"
+                                    >
+                                          <Skeleton className="w-full" style={{ aspectRatio: ratio }} />
+                                          <Skeleton className="h-6 w-3/4" />
+                                          <Skeleton className="h-4 w-1/2" />
+                                    </div>
+                              ))
+                        ) : assets.length > 0 ? (
+                              assets.map(asset => <AssetCard key={asset._id} asset={asset} />)
+                        ) : (
+                              <div className="col-span-full py-20 text-center border-2 border-dashed border-(--border-default)">
+                                    <p className="text-(--text-muted) font-bold uppercase tracking-widest">
+                                          NO_ASSETS_IDENTIFIED_IN_SYSTEM
+                                    </p>
+                              </div>
+                        )}
+                  </div>
+            </section>
+      );
+};
