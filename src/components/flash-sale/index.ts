@@ -1,6 +1,5 @@
 export * from './buy.button';
 export * from './leaderboard';
-export * from './product.card';
 export * from './countdown.timer';
 export * from './stock.indicator';
 export * from './leaderboard.item';
