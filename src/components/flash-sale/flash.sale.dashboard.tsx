@@ -1,5 +1,4 @@
 import { useFlashSale, useLeaderboard } from '../../hooks';
-import { ProductCard } from './product.card';
 import { Leaderboard } from './leaderboard';
 
 export function FlashSaleDashboard() {
