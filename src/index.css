@@ -313,6 +313,16 @@ body::after {
     100% { transform: rotate(360deg) scale(1); }
 }
 
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
 /* ===== Animation Classes ===== */
 .animate-fade-in-up {
     animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -369,6 +379,14 @@ body::after {
 
 .animate-glow-premium {
     animation: pulse-glow-premium 4s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+    animation: spin-slow 8s linear infinite;
+}
+
+.animate-bounce-slow {
+    animation: bounce-slow 3s ease-in-out infinite;
 }
 
 /* Stagger delays for choreography */
