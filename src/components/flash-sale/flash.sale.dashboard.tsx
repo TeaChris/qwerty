@@ -2,14 +2,7 @@ import { useFlashSale, useLeaderboard } from '../../hooks';
 import { Leaderboard } from './leaderboard';
 
 export function FlashSaleDashboard() {
-      const {
-            status,
-            timeRemaining,
-            timeUntilStart,
-            isPurchasing,
-            purchase,
-            isLoading: isSaleLoading
-      } = useFlashSale();
+      const { status, isLoading: isSaleLoading } = useFlashSale();
 
       const { leaderboard, isLoading: isLeaderboardLoading, total: leaderboardTotal } = useLeaderboard();
 
