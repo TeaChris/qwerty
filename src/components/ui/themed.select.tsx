@@ -66,7 +66,7 @@ export const ThemedSelect = ({
 
                   {/* Dropdown Menu */}
                   {isOpen && (
-                        <div className="absolute top-full left-0 right-0 mt-2 glass border-2 border-(--border-accent) z-[100] max-h-60 overflow-y-auto animate-fade-in-down">
+                        <div className="absolute top-full left-0 right-0 mt-2 glass border-2 border-(--border-accent) z-100 max-h-60 overflow-y-auto animate-fade-in-down">
                               {options.length === 0 ? (
                                     <div className="p-4 text-center text-sm text-(--text-muted)">
                                           No options available
