@@ -79,12 +79,12 @@ apiClient.interceptors.response.use(
       }
 );
 
-export const api = async <T>(
+export const api = async <T, D = unknown>(
       endpoint: string,
-      data?: Record<string, unknown> | FormData,
+      data?: D,
       extraMethods?: 'PUT' | 'DELETE' | 'PATCH'
 ): Promise<{ data?: T; error?: ApiError }> => {
-      const method = extraMethods && data ? extraMethods : data && !extraMethods ? 'POST' : 'GET';
+      const method = extraMethods || (data ? 'POST' : 'GET');
 
       const makeRequest = async (): Promise<AxiosResponse<T>> => {
             return apiClient.request<T>({
