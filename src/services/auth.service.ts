@@ -34,5 +34,20 @@ export const authService = {
                   clearAccessToken();
                   return { error: error as ApiError };
             }
+      },
+
+      async forgotPassword(email: string): Promise<{ data?: { status: string; message: string }; error?: ApiError }> {
+            const result = await api<{ status: string; message: string }>('/auth/forgot-password', { email });
+            return result;
+      },
+
+      async resetPassword(
+            token: string,
+            password: string
+      ): Promise<{ data?: { status: string; message: string }; error?: ApiError }> {
+            const result = await api<{ status: string; message: string }>(`/auth/reset-password/${token}`, {
+                  password
+            });
+            return result;
       }
 };
