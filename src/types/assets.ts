@@ -1,4 +1,6 @@
-export interface Product {
+export type AssetType = 'event_pass' | 'identity_badge' | 'smart_device' | 'intel_report';
+
+export interface Asset {
       _id: string;
       name: string;
       description: string;
@@ -7,17 +9,21 @@ export interface Product {
       stock: number;
       images: string[];
       category: string;
+      assetType: AssetType;
       tags: string[];
       isActive: boolean;
+      accessDetails?: string;
+      editionInfo?: string;
+      metadata?: Record<string, unknown>;
       createdBy: string;
       createdAt: string;
       updatedAt: string;
 }
 
-export interface ProductsResponse {
+export interface AssetsResponse {
       status: string;
       data: {
-            products: Product[];
+            assets: Asset[];
             pagination: {
                   page: number;
                   limit: number;
@@ -27,7 +33,7 @@ export interface ProductsResponse {
       };
 }
 
-export interface CreateProductRequest {
+export interface CreateAssetRequest {
       name: string;
       description: string;
       price: number;
@@ -35,5 +41,9 @@ export interface CreateProductRequest {
       stock: number;
       images?: string[];
       category: string;
+      assetType: AssetType;
       tags?: string[];
+      accessDetails?: string;
+      editionInfo?: string;
+      metadata?: Record<string, unknown>;
 }

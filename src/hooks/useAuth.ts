@@ -6,7 +6,7 @@ import type { User, RegisterRequest } from '../types/sale.types';
 
 interface UseAuthResult {
       user: User | null;
-      logout: () => void;
+      logout: () => Promise<void>;
       isLoading: boolean;
       isInitialized: boolean;
       isAuthenticated: boolean;
@@ -103,10 +103,18 @@ export function useAuth(): UseAuthResult {
             [setLoading]
       );
 
-      const logout = useCallback(() => {
-            authService.logout();
-            storeLogout();
-            toast.success('Logged out successfully');
+      // F2 fix: await the API call so the backend actually revokes the JTI.
+      // Previously this was fire-and-forget, meaning the refresh token stayed
+      // valid in Redis even after the user clicked "Logout".
+      const logout = useCallback(async () => {
+            try {
+                  await authService.logout();
+            } catch (_err) {
+                  console.error('Logout API error:', _err);
+            } finally {
+                  storeLogout();
+                  toast.success('Logged out successfully');
+            }
       }, [storeLogout]);
 
       return {

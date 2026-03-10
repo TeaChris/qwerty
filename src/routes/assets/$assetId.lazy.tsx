@@ -3,17 +3,17 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { api } from '../../lib';
-import type { Product } from '../../types';
+import type { Asset } from '../../types';
 import { LoadingScreen } from '../../components';
 import { useFlashSale } from '../../hooks/useFlashSale';
 
-export const Route = createLazyFileRoute('/products/$productId')({
-      component: ProductDetailComponent
+export const Route = createLazyFileRoute('/assets/$assetId')({
+      component: AssetDetailComponent
 });
 
-function ProductDetailComponent() {
-      const { productId } = Route.useParams();
-      const [product, setProduct] = useState<Product | null>(null);
+function AssetDetailComponent() {
+      const { assetId } = Route.useParams();
+      const [asset, setAsset] = useState<Asset | null>(null);
       const [isLoading, setIsLoading] = useState(true);
       const [error, setError] = useState<string | null>(null);
 
@@ -25,18 +25,18 @@ function ProductDetailComponent() {
             leaderboardTotal,
             purchase: initiateFlashPurchase,
             isPurchasing: isFlashPurchasing
-      } = useFlashSale(productId);
+      } = useFlashSale(assetId);
 
       useEffect(() => {
-            const fetchProduct = async () => {
+            const fetchAsset = async () => {
                   try {
                         setIsLoading(true);
-                        const { data, error } = await api<{ status: string; data: { product: Product } }>(
-                              `/products/${productId}`
+                        const { data, error } = await api<{ status: string; data: { asset: Asset } }>(
+                              `/assets/${assetId}`
                         );
 
                         if (error) throw new Error('Communication breakdown: Resource unavailable');
-                        if (data) setProduct(data.data.product);
+                        if (data) setAsset(data.data.asset);
                   } catch (err: unknown) {
                         const message = err instanceof Error ? err.message : 'Unknown communication breakdown';
                         setError(message);
@@ -45,12 +45,12 @@ function ProductDetailComponent() {
                   }
             };
 
-            fetchProduct();
-      }, [productId]);
+            fetchAsset();
+      }, [assetId]);
 
-      if (isLoading) return <LoadingScreen message="Linking with product node..." progress={60} />;
+      if (isLoading) return <LoadingScreen message="Linking with asset node..." progress={60} />;
 
-      if (error || !product) {
+      if (error || !asset) {
             return (
                   <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-(--bg-canvas)">
                         <div className="max-w-md w-full border-2 border-(--data-danger) p-8 bg-(--data-danger)/10 text-center space-y-4">
@@ -67,7 +67,7 @@ function ProductDetailComponent() {
             );
       }
 
-      const { name, description, price, compareAtPrice, images, category, stock } = product;
+      const { name, description, price, compareAtPrice, images, category, stock } = asset;
       const imageUrl = images[0] || 'https://via.placeholder.com/800x800?text=NO+IMAGE';
 
       // Flash Sale Logic
@@ -157,7 +157,7 @@ function ProductDetailComponent() {
                                           />
                                           <div className="absolute top-6 left-6 flex flex-col gap-2">
                                                 <span className="px-4 py-2 bg-black/80 backdrop-blur-md border border-white/10 text-xs font-black uppercase tracking-widest">
-                                                      ID: {productId.slice(-8).toUpperCase()}
+                                                      ID: {assetId.slice(-8).toUpperCase()}
                                                 </span>
                                                 {isLive && (
                                                       <span className="px-4 py-2 bg-(--accent-primary) text-black text-[10px] font-black uppercase tracking-wider shadow-xl animate-pulse flex items-center gap-2">

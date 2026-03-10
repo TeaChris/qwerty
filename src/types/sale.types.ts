@@ -4,9 +4,9 @@ export type SaleStatusType = 'upcoming' | 'live' | 'sold_out';
 
 export interface SaleStatus {
       _id?: string;
-      productId: string;
-      productName: string;
-      productImage: string;
+      assetId: string;
+      assetName: string;
+      assetImage: string;
       saleName?: string; // Flash sale title/name
       status: SaleStatusType;
       startsAt: string;

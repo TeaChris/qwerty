@@ -1,20 +1,27 @@
 import type { FC } from 'react';
 import { Link } from '@tanstack/react-router';
 
-import type { Product } from '../types';
+import type { Asset } from '../types';
 
-interface ProductCardProps {
-      product: Product;
+const ASSET_TYPE_LABELS: Record<string, string> = {
+      event_pass: 'EVENT PASS',
+      identity_badge: 'ID BADGE',
+      smart_device: 'SMART DEVICE',
+      intel_report: 'INTEL REPORT'
+};
+
+interface AssetCardProps {
+      asset: Asset;
 }
 
-export const ProductCard: FC<ProductCardProps> = ({ product }) => {
-      const { _id, name, price, compareAtPrice, images, category, stock } = product;
+export const AssetCard: FC<AssetCardProps> = ({ asset }) => {
+      const { _id, name, price, compareAtPrice, images, category, stock, assetType } = asset;
       const imageUrl = images[0] || 'https://via.placeholder.com/400x400?text=NO+IMAGE';
 
       return (
             <Link
-                  to="/products/$productId"
-                  params={{ productId: _id }}
+                  to="/assets/$assetId"
+                  params={{ assetId: _id }}
                   className="group relative inline-block w-full break-inside-avoid mb-6 bg-(--bg-elevated) border-2 border-(--border-default) hover:border-(--accent-primary) transition-all duration-300"
             >
                   {/* Image Container */}
@@ -35,12 +42,19 @@ export const ProductCard: FC<ProductCardProps> = ({ product }) => {
                               </span>
                         </div>
 
+                        {/* Asset Type Badge */}
+                        <div className="absolute top-4 right-4">
+                              <span className="px-3 py-1 bg-(--accent-primary)/80 backdrop-blur-md text-[10px] font-black uppercase tracking-widest text-black">
+                                    {ASSET_TYPE_LABELS[assetType] || assetType}
+                              </span>
+                        </div>
+
                         {/* Stock Status */}
                         <div className="absolute bottom-4 left-4">
                               <p
                                     className={`text-[10px] font-bold uppercase tracking-tighter ${stock > 0 ? 'text-(--data-success)' : 'text-(--data-danger)'}`}
                               >
-                                    {stock > 0 ? `INSTOCK_UNIT_COUNT: ${stock}` : 'RESOURCE_EXHAUSTED'}
+                                    {stock > 0 ? `UNITS_AVAILABLE: ${stock}` : 'RESOURCE_EXHAUSTED'}
                               </p>
                         </div>
                   </div>

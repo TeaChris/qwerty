@@ -2,20 +2,20 @@ import { api } from '../lib/use.api';
 import type { SaleStatus, PurchaseResponse, LeaderboardResponse } from '../types/sale.types';
 
 export const saleService = {
-      async getStatus(productId?: string): Promise<{ data?: SaleStatus; error?: unknown }> {
-            const url = productId ? `/flash-sales/product/${productId}` : '/flash-sales/active';
+      async getStatus(assetId?: string): Promise<{ data?: SaleStatus; error?: unknown }> {
+            const url = assetId ? `/flash-sales/asset/${assetId}` : '/flash-sales/active';
             const response = await api<{ data: SaleStatus }>(url);
             return { data: response.data?.data, error: response.error };
       },
 
-      async purchase(saleId: string, productId: string): Promise<{ data?: PurchaseResponse; error?: unknown }> {
+      async purchase(saleId: string, assetId: string): Promise<{ data?: PurchaseResponse; error?: unknown }> {
             const response = await api<{
                   status: string;
                   message: string;
                   data: {
                         purchase: {
                               _id: string;
-                              productId: string;
+                              assetId: string;
                               userId: string;
                               price: number;
                               status: string;
@@ -23,7 +23,7 @@ export const saleService = {
                         };
                         authorization_url: string;
                   };
-            }>(`/flash-sales/${saleId}/purchase`, { productId });
+            }>(`/flash-sales/${saleId}/purchase`, { assetId });
 
             return {
                   data: response.data

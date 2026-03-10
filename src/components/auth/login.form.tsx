@@ -64,12 +64,20 @@ export function LoginForm() {
                         </div>
 
                         <div className="space-y-2">
-                              <label
-                                    htmlFor="password"
-                                    className="text-sm font-bold text-(--text-secondary) uppercase tracking-widest ml-1"
-                              >
-                                    Password
-                              </label>
+                              <div className="flex items-center justify-between ml-1">
+                                    <label
+                                          htmlFor="password"
+                                          className="text-sm font-bold text-(--text-secondary) uppercase tracking-widest"
+                                    >
+                                          Password
+                                    </label>
+                                    <Link
+                                          to="/forgot-password"
+                                          className="text-xs font-bold text-(--accent-primary) hover:underline"
+                                    >
+                                          Forgot your password?
+                                    </Link>
+                              </div>
                               <input
                                     id="password"
                                     type="password"

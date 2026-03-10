@@ -1,7 +1,7 @@
 export interface DashboardStats {
       totalUsers: number;
       newUsersThisWeek: number;
-      totalProducts: number;
+      totalAssets: number;
       activeFlashSales: number;
       totalFlashSales: number;
 }

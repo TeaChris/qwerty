@@ -96,30 +96,30 @@ export const FlashSaleSection: FC = () => {
                                       </div>
                                 ))
                               : flashSales.map(flashSale => {
-                                      // Extract populated product from the first product in the array
-                                      const firstProduct = flashSale.products[0];
-                                      // Backend populates productId with product details
-                                      const populatedProduct = firstProduct?.productId as
+                                      // Extract populated asset from the first asset in the array
+                                      const firstAsset = flashSale.assets[0];
+                                      // Backend populates assetId with asset details
+                                      const populatedAsset = firstAsset?.assetId as
                                             | { _id: string; name: string; images: string[] }
                                             | string
                                             | undefined;
 
-                                      // Determine if product is populated (object) or just a string ID
-                                      const product =
-                                            typeof populatedProduct === 'object' && populatedProduct !== null
-                                                  ? populatedProduct
+                                      // Determine if asset is populated (object) or just a string ID
+                                      const asset =
+                                            typeof populatedAsset === 'object' && populatedAsset !== null
+                                                  ? populatedAsset
                                                   : undefined;
 
                                       return (
                                             <FlashSaleCard
                                                   key={flashSale._id}
                                                   flashSale={flashSale}
-                                                  product={
-                                                        product
+                                                  asset={
+                                                        asset
                                                               ? {
-                                                                      _id: product._id,
-                                                                      name: product.name,
-                                                                      images: product.images
+                                                                      _id: asset._id,
+                                                                      name: asset.name,
+                                                                      images: asset.images
                                                                 }
                                                               : undefined
                                                   }

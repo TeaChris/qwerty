@@ -1,23 +1,23 @@
 import { useEffect, useState, type FC } from 'react';
 
 import { Skeleton } from './ui';
-import type { Product } from '../types';
-import { getProducts } from '../services';
-import { ProductCard } from './product.card';
+import type { Asset } from '../types';
+import { getAssets } from '../services';
+import { AssetCard } from './asset.card';
 
-export const ProductGrid: FC = () => {
-      const [products, setProducts] = useState<Product[]>([]);
+export const AssetGrid: FC = () => {
+      const [assets, setAssets] = useState<Asset[]>([]);
       const [isLoading, setIsLoading] = useState(true);
       const [error, setError] = useState<string | null>(null);
 
       useEffect(() => {
-            const fetchProducts = async () => {
+            const fetchAssets = async () => {
                   try {
                         setIsLoading(true);
-                        const { data, error } = await getProducts(1, 12, { isActive: true });
+                        const { data, error } = await getAssets(1, 12, { isActive: true });
 
                         if (error) throw new Error('System link failure: Unable to fetch assets');
-                        if (data) setProducts(data.data.products);
+                        if (data) setAssets(data.data.assets);
                   } catch (err: unknown) {
                         const message = err instanceof Error ? err.message : 'Unknown link failure';
                         setError(message);
@@ -26,7 +26,7 @@ export const ProductGrid: FC = () => {
                   }
             };
 
-            fetchProducts();
+            fetchAssets();
       }, []);
 
       if (error) {
@@ -42,7 +42,7 @@ export const ProductGrid: FC = () => {
                   <div className="flex items-center justify-between mb-8 border-b-2 border-(--border-default) pb-4">
                         <h2 className="text-2xl font-black uppercase tracking-tighter">AVAILABLE_ASSETS</h2>
                         <div className="flex items-center gap-4 text-xs font-bold text-(--text-muted)">
-                              <span className="mono-number">[ {products.length} ]</span>
+                              <span className="mono-number">[ {assets.length} ]</span>
                               UNITS_ONLINE
                         </div>
                   </div>
@@ -59,8 +59,8 @@ export const ProductGrid: FC = () => {
                                           <Skeleton className="h-4 w-1/2" />
                                     </div>
                               ))
-                        ) : products.length > 0 ? (
-                              products.map(product => <ProductCard key={product._id} product={product} />)
+                        ) : assets.length > 0 ? (
+                              assets.map(asset => <AssetCard key={asset._id} asset={asset} />)
                         ) : (
                               <div className="col-span-full py-20 text-center border-2 border-dashed border-(--border-default)">
                                     <p className="text-(--text-muted) font-bold uppercase tracking-widest">

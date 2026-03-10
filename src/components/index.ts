@@ -1,8 +1,9 @@
 export { LiveBadge } from './live.badge';
 export { UserAvatar } from './user.avatar';
-export { ProductCard } from './product.card';
-export { ProductGrid } from './product.grid';
+export { AssetCard } from './asset.card';
+export { AssetGrid } from './asset.grid';
 export { UserDropdown } from './user.dropdown';
+export * from './landing/LandingPage';
 export { KineticTimer } from './kinetic.timer';
 export { DataProgressBar } from './data.progress.bar';
 

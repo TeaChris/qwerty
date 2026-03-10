@@ -182,7 +182,7 @@ function FlashSaleCard({ sale, onActivate, onDeactivate, onViewLogs }: FlashSale
                                           ⏰ {new Date(sale.startTime).toLocaleString()} -{' '}
                                           {new Date(sale.endTime).toLocaleString()}
                                     </span>
-                                    <span>📦 {sale.products.length} products</span>
+                                    <span>📦 {sale.assets.length} assets</span>
                               </div>
                         </div>
                         <div className="flex items-center gap-3">
@@ -230,19 +230,19 @@ interface CreateFlashSaleModalProps {
 
 function CreateFlashSaleModal({ onClose, onCreate }: CreateFlashSaleModalProps) {
       const {
-            products,
+            assets,
             formData,
             salePrice,
-            addProduct,
+            addAsset,
             stockLimit,
             submitting,
             setFormData,
             handleSubmit,
             setSalePrice,
-            removeProduct,
+            removeAsset,
             setStockLimit,
-            selectedProduct,
-            setSelectedProduct
+            selectedAsset,
+            setSelectedAsset
       } = useFlashSaleForm();
 
       const onFormSubmit = (e: React.FormEvent) => handleSubmit(e, onCreate);
@@ -323,20 +323,20 @@ function CreateFlashSaleModal({ onClose, onCreate }: CreateFlashSaleModalProps) 
                                     />
                               </div>
 
-                              {/* Add Products Section */}
+                              {/* Add Assets Section */}
                               <div className="border-2 border-(--border-default) p-4">
-                                    <h3 className="font-black mb-3">ADD PRODUCTS TO SALE</h3>
+                                    <h3 className="font-black mb-3">ADD ASSETS TO SALE</h3>
 
                                     <div className="grid grid-cols-4 gap-3 mb-3">
                                           <select
-                                                value={selectedProduct}
-                                                onChange={e => setSelectedProduct(e.target.value)}
+                                                value={selectedAsset}
+                                                onChange={e => setSelectedAsset(e.target.value)}
                                                 className="col-span-2 px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none"
                                           >
-                                                <option value="">Select product...</option>
-                                                {products.map(product => (
-                                                      <option key={product._id} value={product._id}>
-                                                            {product.name} (${product.price})
+                                                <option value="">Select asset...</option>
+                                                {assets.map(asset => (
+                                                      <option key={asset._id} value={asset._id}>
+                                                            {asset.name} (${asset.price})
                                                       </option>
                                                 ))}
                                           </select>
@@ -361,34 +361,32 @@ function CreateFlashSaleModal({ onClose, onCreate }: CreateFlashSaleModalProps) 
 
                                     <button
                                           type="button"
-                                          onClick={addProduct}
+                                          onClick={addAsset}
                                           className="w-full px-4 py-2 bg-(--accent-primary) text-white font-bold text-sm hover:bg-(--accent-secondary) transition-colors"
                                     >
-                                          + ADD PRODUCT
+                                          + ADD ASSET
                                     </button>
 
-                                    {/* Added Products List */}
-                                    {formData.products.length > 0 && (
+                                    {/* Added Assets List */}
+                                    {formData.assets.length > 0 && (
                                           <div className="mt-4 space-y-2">
                                                 <div className="micro-text text-xs text-(--text-muted)">
-                                                      ADDED PRODUCTS:
+                                                      ADDED ASSETS:
                                                 </div>
-                                                {formData.products.map((product, index) => {
-                                                      const productInfo = products.find(
-                                                            p => p._id === product.productId
-                                                      );
+                                                {formData.assets.map((asset, index) => {
+                                                      const assetInfo = assets.find(a => a._id === asset.assetId);
                                                       return (
                                                             <div
                                                                   key={index}
                                                                   className="flex items-center justify-between bg-(--bg-elevated) p-2 text-sm"
                                                             >
                                                                   <span>
-                                                                        {productInfo?.name} - ${product.salePrice} (
-                                                                        {product.stockLimit} units)
+                                                                        {assetInfo?.name} - ${asset.salePrice} (
+                                                                        {asset.stockLimit} units)
                                                                   </span>
                                                                   <button
                                                                         type="button"
-                                                                        onClick={() => removeProduct(index)}
+                                                                        onClick={() => removeAsset(index)}
                                                                         className="text-(--data-danger) hover:underline text-xs font-bold"
                                                                   >
                                                                         REMOVE

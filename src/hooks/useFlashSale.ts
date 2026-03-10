@@ -20,9 +20,15 @@ interface UseFlashSaleResult {
       isLoading: boolean;
 }
 
-export function useFlashSale(productId?: string): UseFlashSaleResult {
+export function useFlashSale(assetId?: string): UseFlashSaleResult {
       const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
       const [leaderboardTotal, setLeaderboardTotal] = useState(0);
+
+      // F1 fix: use useState instead of a ref so callers re-render when loading changes.
+      // A ref mutation is invisible to React's reconciler — isLoadingRef.current was
+      // always returning the *initial* value (false) on every render.
+      const [isLoading, setIsLoading] = useState(false);
+      const fetchInProgressRef = useRef(false); // guard against concurrent fetches
 
       const {
             status,
@@ -34,8 +40,6 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             decrementStock
       } = useSaleStore();
 
-      const isLoadingRef = useRef(false);
-
       // Countdown to sale end (when live)
       const timeRemaining = useCountdown(status?.status === 'live' ? status.endsAt : null);
 
@@ -44,42 +48,37 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
 
       // Fetch sale status
       const fetchStatus = useCallback(async () => {
-            if (isLoadingRef.current) return;
+            if (fetchInProgressRef.current) return;
 
-            isLoadingRef.current = true;
-            const { data, error } = await saleService.getStatus(productId);
-            isLoadingRef.current = false;
+            fetchInProgressRef.current = true;
+            setIsLoading(true);
+            const { data, error } = await saleService.getStatus(assetId);
+            fetchInProgressRef.current = false;
+            setIsLoading(false);
 
             if (data) {
                   setStatus(data);
             } else if (error) {
                   console.error('Failed to fetch sale status:', error);
             }
-      }, [setStatus, productId]);
+      }, [setStatus, assetId]);
 
-      // Fetch leaderboard
-      const fetchLeaderboard = useCallback(async () => {
-            if (!status?._id) return;
-            const { data } = await saleService.getLeaderboard(status._id, 1, 10);
-            if (data) {
-                  setLeaderboard(data.entries);
-                  setLeaderboardTotal(data.total);
-            }
-      }, [status?._id]);
+      // F6 fix: leaderboard fetching is now exclusively owned by useLeaderboard.
+      // Previously useFlashSale also called fetchLeaderboard() causing double fetches
+      // whenever both hooks were mounted on the same page.
 
       const { user } = useAuthStore();
 
-      // Stable refs for socket handlers to avoid stale closures
+      // Stable ref for socket handlers to avoid stale closures
       const statusRef = useRef(status);
       statusRef.current = status;
 
-      // Initial data fetch (runs once on mount / productId change)
+      // Initial data fetch (runs once on mount / assetId change)
       useEffect(() => {
             fetchStatus();
-            fetchLeaderboard();
-      }, [fetchStatus, fetchLeaderboard]);
+      }, [fetchStatus]);
 
-      // Socket.io connection and event handlers (re-runs when sale or user changes)
+      // Socket.io connection and event handlers
       useEffect(() => {
             connectSocket();
 
@@ -92,14 +91,14 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             }
 
             const handleStockUpdate = ({
-                  productId,
+                  assetId: updatedAssetId,
                   remainingStock
             }: {
-                  productId: string;
+                  assetId: string;
                   remainingStock: number;
             }) => {
                   const current = useSaleStore.getState().status;
-                  if (current?.productId === productId) {
+                  if (current?.assetId === updatedAssetId) {
                         setStatus({ ...current, remainingStock });
                   }
             };
@@ -111,7 +110,7 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
 
                   setLeaderboard(prev => [
                         {
-                              rank: prev.length + 1, // Rough rank for live feed
+                              rank: prev.length + 1,
                               userId: '',
                               username: purchase.username,
                               purchasedAt: purchase.purchasedAt
@@ -159,7 +158,7 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             decrementStock();
 
             try {
-                  const { data, error } = await saleService.purchase(status?._id || '', status?.productId || '');
+                  const { data, error } = await saleService.purchase(status?._id || '', status?.assetId || '');
 
                   if (data?.success && data.authorizationUrl) {
                         toast.info('Secure payment node initialized. Redirecting...', {
@@ -188,7 +187,7 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             } finally {
                   setPurchasing(false);
             }
-      }, [checkCanPurchase, setPurchasing, decrementStock, fetchStatus, status?._id, status?.productId]);
+      }, [checkCanPurchase, setPurchasing, decrementStock, fetchStatus, status?._id, status?.assetId]);
 
       return {
             status,
@@ -199,6 +198,6 @@ export function useFlashSale(productId?: string): UseFlashSaleResult {
             purchase,
             leaderboard,
             leaderboardTotal,
-            isLoading: isLoadingRef.current
+            isLoading
       };
 }

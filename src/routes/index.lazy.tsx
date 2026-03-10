@@ -1,6 +1,6 @@
-import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
+import { createLazyFileRoute } from '@tanstack/react-router';
 
-import { UserDropdown, LiveBadge, ProductGrid } from '../components';
+import { UserDropdown, LiveBadge, AssetGrid, LandingPage } from '../components';
 import { FlashSaleSection } from '../components/flash-sale';
 import { useAuthStore } from '../stores';
 import { useAuth } from '../hooks';
@@ -14,9 +14,9 @@ function IndexComponent() {
       const { user } = useAuthStore();
 
       // Root component handles loading state, so we're guaranteed to be initialized here
-      // Protect the route - redirect to login if not authenticated
+      // Show public landing page if not authenticated
       if (isInitialized && !isAuthenticated) {
-            return <Navigate to="/login" />;
+            return <LandingPage />;
       }
 
       return (
@@ -90,9 +90,9 @@ function IndexComponent() {
                               <FlashSaleSection />
                         </div>
 
-                        {/* Product Grid */}
+                        {/* Asset Grid */}
                         <div className="animate-fade-in-up stagger-3">
-                              <ProductGrid />
+                              <AssetGrid />
                         </div>
                   </main>
 

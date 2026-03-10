@@ -7,5 +7,6 @@ export interface ApiError {
 
 export * from './sales';
 export * from './admin';
-export * from './products';
+export * from './assets';
 export * from './sale.types';
+export * from './category';

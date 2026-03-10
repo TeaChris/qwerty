@@ -2,8 +2,8 @@ export interface FlashSale {
       _id: string;
       title: string;
       description: string;
-      products: Array<{
-            productId: string;
+      assets: Array<{
+            assetId: string;
             salePrice: number;
             stockLimit: number;
             stockRemaining: number;
@@ -21,8 +21,8 @@ export interface FlashSale {
 export interface CreateFlashSaleRequest {
       title: string;
       description: string;
-      products: Array<{
-            productId: string;
+      assets: Array<{
+            assetId: string;
             salePrice: number;
             stockLimit: number;
       }>;
