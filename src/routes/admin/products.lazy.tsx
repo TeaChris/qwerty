@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
+import { Plus, X } from 'lucide-react';
 
 import { useAuthStore } from '../../stores';
 import { useAdminAssets } from '../../hooks';
-import type { CreateAssetRequest, AssetType } from '../../types';
-import { LoadingScreen, AdminHeader } from '../../components';
+import type { CreateAssetRequest, AssetType, Category } from '../../types';
+import { getCategories, createCategory } from '../../services';
+import { LoadingScreen, AdminHeader, ThemedSelect, Input } from '../../components';
 
 export const Route = createLazyFileRoute('/admin/products')({
       component: AdminAssets
@@ -13,7 +15,21 @@ export const Route = createLazyFileRoute('/admin/products')({
 function AdminAssets() {
       const { user, isLoading: isAuthLoading } = useAuthStore();
       const [showCreateModal, setShowCreateModal] = useState(false);
+      const [categories, setCategories] = useState<Category[]>([]);
       const { assets, loadingAssets, page, setPage, total, handleCreateAsset, handleDeleteAsset } = useAdminAssets();
+
+      const fetchCategories = async () => {
+            const { data } = await getCategories();
+            if (data) {
+                  setCategories(data.data.categories);
+            }
+      };
+
+      useEffect(() => {
+            if (user?.role === 'ADMIN') {
+                  fetchCategories();
+            }
+      }, [user]);
 
       // Redirect non-admin users
       if (!isAuthLoading && (!user || user.role !== 'ADMIN')) {
@@ -167,7 +183,12 @@ function AdminAssets() {
 
                   {/* Create Modal */}
                   {showCreateModal && (
-                        <CreateAssetModal onClose={() => setShowCreateModal(false)} onCreate={onCreateSuccess} />
+                        <CreateAssetModal
+                              onClose={() => setShowCreateModal(false)}
+                              onCreate={onCreateSuccess}
+                              categories={categories}
+                              onCategoryCreated={fetchCategories}
+                        />
                   )}
             </div>
       );
@@ -177,9 +198,11 @@ function AdminAssets() {
 interface CreateAssetModalProps {
       onClose: () => void;
       onCreate: (data: CreateAssetRequest) => Promise<boolean>;
+      categories: Category[];
+      onCategoryCreated: () => Promise<void>;
 }
 
-function CreateAssetModal({ onClose, onCreate }: CreateAssetModalProps) {
+function CreateAssetModal({ onClose, onCreate, categories, onCategoryCreated }: CreateAssetModalProps) {
       const [formData, setFormData] = useState<CreateAssetRequest>({
             name: '',
             description: '',
@@ -190,6 +213,25 @@ function CreateAssetModal({ onClose, onCreate }: CreateAssetModalProps) {
             tags: []
       });
       const [submitting, setSubmitting] = useState(false);
+      const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
+      const [newCategoryName, setNewCategoryName] = useState('');
+      const [creatingCategory, setCreatingCategory] = useState(false);
+
+      const handleCreateCategory = async () => {
+            if (!newCategoryName.trim()) return;
+            setCreatingCategory(true);
+            const { data, error } = await createCategory({ name: newCategoryName });
+            setCreatingCategory(false);
+
+            if (data) {
+                  await onCategoryCreated();
+                  setFormData({ ...formData, category: data.data.category.name });
+                  setNewCategoryName('');
+                  setShowNewCategoryInput(false);
+            } else if (error) {
+                  // Error handled by interceptor toast
+            }
+      };
 
       const handleSubmit = async (e: React.FormEvent) => {
             e.preventDefault();
@@ -277,42 +319,61 @@ function CreateAssetModal({ onClose, onCreate }: CreateAssetModalProps) {
                                     </div>
                               </div>
 
-                              <div>
-                                    <label className="block micro-text text-xs text-(--text-muted) mb-2">
-                                          ASSET TYPE *
-                                    </label>
-                                    <select
-                                          required
+                              <div className="grid grid-cols-2 gap-4">
+                                    <ThemedSelect
+                                          label="ASSET TYPE *"
                                           value={formData.assetType}
-                                          onChange={e =>
-                                                setFormData({ ...formData, assetType: e.target.value as AssetType })
-                                          }
-                                          className="w-full px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none"
-                                    >
-                                          <option value="event_pass">Event Pass</option>
-                                          <option value="identity_badge">Identity Badge</option>
-                                          <option value="smart_device">Smart Device</option>
-                                          <option value="intel_report">Intel Report</option>
-                                    </select>
-                              </div>
+                                          onChange={val => setFormData({ ...formData, assetType: val as AssetType })}
+                                          options={[
+                                                { value: 'event_pass', label: 'Event Pass' },
+                                                { value: 'identity_badge', label: 'Identity Badge' },
+                                                { value: 'smart_device', label: 'Smart Device' },
+                                                { value: 'intel_report', label: 'Intel Report' }
+                                          ]}
+                                    />
 
-                              <div>
-                                    <label className="block micro-text text-xs text-(--text-muted) mb-2">
-                                          CATEGORY *
-                                    </label>
-                                    <select
-                                          required
-                                          value={formData.category}
-                                          onChange={e => setFormData({ ...formData, category: e.target.value })}
-                                          className="w-full px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none"
-                                    >
-                                          <option value="">Select category...</option>
-                                          <option value="electronics">Electronics</option>
-                                          <option value="clothing">Clothing</option>
-                                          <option value="food">Food</option>
-                                          <option value="home">Home & Garden</option>
-                                          <option value="sports">Sports</option>
-                                    </select>
+                                    <div>
+                                          <div className="flex justify-between items-center mb-2">
+                                                <label className="block micro-text text-xs text-(--text-muted)">
+                                                      CATEGORY *
+                                                </label>
+                                                <button
+                                                      type="button"
+                                                      onClick={() => setShowNewCategoryInput(!showNewCategoryInput)}
+                                                      className="text-xs font-bold text-(--accent-primary) hover:underline"
+                                                >
+                                                      {showNewCategoryInput ? 'CANCEL' : '+ CREATE NEW'}
+                                                </button>
+                                          </div>
+
+                                          {showNewCategoryInput ? (
+                                                <div className="flex gap-2">
+                                                      <input
+                                                            type="text"
+                                                            value={newCategoryName}
+                                                            onChange={e => setNewCategoryName(e.target.value)}
+                                                            className="flex-1 px-4 py-2 bg-(--bg-surface) border-2 border-(--accent-primary) text-(--text-primary) outline-none text-sm"
+                                                            placeholder="New category..."
+                                                            autoFocus
+                                                      />
+                                                      <button
+                                                            type="button"
+                                                            onClick={handleCreateCategory}
+                                                            disabled={creatingCategory}
+                                                            className="px-4 py-2 bg-(--accent-primary) text-white font-bold text-xs disabled:opacity-50"
+                                                      >
+                                                            {creatingCategory ? '...' : 'ADD'}
+                                                      </button>
+                                                </div>
+                                          ) : (
+                                                <ThemedSelect
+                                                      value={formData.category}
+                                                      onChange={val => setFormData({ ...formData, category: val })}
+                                                      options={categories.map(c => ({ value: c.name, label: c.name }))}
+                                                      placeholder="Select category..."
+                                                />
+                                          )}
+                                    </div>
                               </div>
 
                               <div className="flex gap-4 pt-4">
