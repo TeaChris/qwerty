@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
-import { Plus, X } from 'lucide-react';
 
 import { useAuthStore } from '../../stores';
 import { useAdminAssets } from '../../hooks';
 import type { CreateAssetRequest, AssetType, Category } from '../../types';
 import { getCategories, createCategory } from '../../services';
-import { LoadingScreen, AdminHeader, ThemedSelect, Input } from '../../components';
+import { LoadingScreen, AdminHeader, ThemedSelect } from '../../components';
 
 export const Route = createLazyFileRoute('/admin/products')({
       component: AdminAssets
@@ -18,16 +17,20 @@ function AdminAssets() {
       const [categories, setCategories] = useState<Category[]>([]);
       const { assets, loadingAssets, page, setPage, total, handleCreateAsset, handleDeleteAsset } = useAdminAssets();
 
-      const fetchCategories = async () => {
+      const fetchCategories = useCallback(async () => {
             const { data } = await getCategories();
             if (data) {
                   setCategories(data.data.categories);
             }
-      };
+      }, []);
 
       useEffect(() => {
             if (user?.role === 'ADMIN') {
-                  fetchCategories();
+                  getCategories().then(({ data }) => {
+                        if (data) {
+                              setCategories(data.data.categories);
+                        }
+                  });
             }
       }, [user]);
 
