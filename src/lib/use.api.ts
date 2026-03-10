@@ -54,12 +54,25 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
       return config;
 });
 
+const PUBLIC_ROUTES = [
+      '/',
+      '/login',
+      '/register',
+      '/forgot-password',
+      '/reset-password',
+      '/verify-email',
+      '/check-email'
+];
+
 apiClient.interceptors.response.use(
       (response: AxiosResponse) => response,
       async error => {
             if (error.response?.status === 401) {
                   clearAccessToken();
-                  toast.error('Unauthorized');
+                  const currentPath = window.location.pathname;
+                  if (!PUBLIC_ROUTES.includes(currentPath)) {
+                        toast.error('Unauthorized');
+                  }
             }
 
             return Promise.reject(error);
@@ -128,7 +141,7 @@ export const api = async <T>(
                   switch (status) {
                         case 401: {
                               const currentPath = window.location.pathname;
-                              if (currentPath !== '/login' && currentPath !== '/register') {
+                              if (!PUBLIC_ROUTES.includes(currentPath)) {
                                     toast.error('log in again');
                                     clearAccessToken();
                                     window.location.href = '/login';
