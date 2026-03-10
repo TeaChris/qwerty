@@ -21,17 +21,11 @@ export const getAssets = async (
 };
 
 export const createAsset = async (data: CreateAssetRequest) => {
-      return api<{ status: string; message: string; data: { asset: Asset } }>('/assets', {
-            method: 'POST',
-            body: data
-      });
+      return api<{ status: string; message: string; data: { asset: Asset } }>('/assets', data);
 };
 
 export const updateAsset = async (id: string, data: Partial<CreateAssetRequest>) => {
-      return api<{ status: string; message: string; data: { asset: Asset } }>(`/assets/${id}`, {
-            method: 'PUT',
-            body: data
-      });
+      return api<{ status: string; message: string; data: { asset: Asset } }>(`/assets/${id}`, data, 'PUT');
 };
 
 export const deleteAsset = async (id: string) => {
