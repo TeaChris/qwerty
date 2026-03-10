@@ -15,8 +15,10 @@ import { Route as PaymentCallbackRouteImport } from './routes/payment/callback'
 import { Route as AssetsAssetIdRouteImport } from './routes/assets/$assetId'
 
 const VerifyEmailLazyRouteImport = createFileRoute('/verify-email')()
+const ResetPasswordLazyRouteImport = createFileRoute('/reset-password')()
 const RegisterLazyRouteImport = createFileRoute('/register')()
 const LoginLazyRouteImport = createFileRoute('/login')()
+const ForgotPasswordLazyRouteImport = createFileRoute('/forgot-password')()
 const CheckEmailLazyRouteImport = createFileRoute('/check-email')()
 const IndexLazyRouteImport = createFileRoute('/')()
 const AdminProductsLazyRouteImport = createFileRoute('/admin/products')()
@@ -28,6 +30,13 @@ const VerifyEmailLazyRoute = VerifyEmailLazyRouteImport.update({
   path: '/verify-email',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/verify-email.lazy').then((d) => d.Route))
+const ResetPasswordLazyRoute = ResetPasswordLazyRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/reset-password.lazy').then((d) => d.Route),
+)
 const RegisterLazyRoute = RegisterLazyRouteImport.update({
   id: '/register',
   path: '/register',
@@ -38,6 +47,13 @@ const LoginLazyRoute = LoginLazyRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/login.lazy').then((d) => d.Route))
+const ForgotPasswordLazyRoute = ForgotPasswordLazyRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() =>
+  import('./routes/forgot-password.lazy').then((d) => d.Route),
+)
 const CheckEmailLazyRoute = CheckEmailLazyRouteImport.update({
   id: '/check-email',
   path: '/check-email',
@@ -87,8 +103,10 @@ const AssetsAssetIdRoute = AssetsAssetIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/check-email': typeof CheckEmailLazyRoute
+  '/forgot-password': typeof ForgotPasswordLazyRoute
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
+  '/reset-password': typeof ResetPasswordLazyRoute
   '/verify-email': typeof VerifyEmailLazyRoute
   '/assets/$assetId': typeof AssetsAssetIdRoute
   '/payment/callback': typeof PaymentCallbackRoute
@@ -99,8 +117,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/check-email': typeof CheckEmailLazyRoute
+  '/forgot-password': typeof ForgotPasswordLazyRoute
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
+  '/reset-password': typeof ResetPasswordLazyRoute
   '/verify-email': typeof VerifyEmailLazyRoute
   '/assets/$assetId': typeof AssetsAssetIdRoute
   '/payment/callback': typeof PaymentCallbackRoute
@@ -112,8 +132,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexLazyRoute
   '/check-email': typeof CheckEmailLazyRoute
+  '/forgot-password': typeof ForgotPasswordLazyRoute
   '/login': typeof LoginLazyRoute
   '/register': typeof RegisterLazyRoute
+  '/reset-password': typeof ResetPasswordLazyRoute
   '/verify-email': typeof VerifyEmailLazyRoute
   '/assets/$assetId': typeof AssetsAssetIdRoute
   '/payment/callback': typeof PaymentCallbackRoute
@@ -126,8 +148,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/check-email'
+    | '/forgot-password'
     | '/login'
     | '/register'
+    | '/reset-password'
     | '/verify-email'
     | '/assets/$assetId'
     | '/payment/callback'
@@ -138,8 +162,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/check-email'
+    | '/forgot-password'
     | '/login'
     | '/register'
+    | '/reset-password'
     | '/verify-email'
     | '/assets/$assetId'
     | '/payment/callback'
@@ -150,8 +176,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/check-email'
+    | '/forgot-password'
     | '/login'
     | '/register'
+    | '/reset-password'
     | '/verify-email'
     | '/assets/$assetId'
     | '/payment/callback'
@@ -163,8 +191,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   CheckEmailLazyRoute: typeof CheckEmailLazyRoute
+  ForgotPasswordLazyRoute: typeof ForgotPasswordLazyRoute
   LoginLazyRoute: typeof LoginLazyRoute
   RegisterLazyRoute: typeof RegisterLazyRoute
+  ResetPasswordLazyRoute: typeof ResetPasswordLazyRoute
   VerifyEmailLazyRoute: typeof VerifyEmailLazyRoute
   AssetsAssetIdRoute: typeof AssetsAssetIdRoute
   PaymentCallbackRoute: typeof PaymentCallbackRoute
@@ -182,6 +212,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VerifyEmailLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -194,6 +231,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordLazyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/check-email': {
@@ -251,8 +295,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   CheckEmailLazyRoute: CheckEmailLazyRoute,
+  ForgotPasswordLazyRoute: ForgotPasswordLazyRoute,
   LoginLazyRoute: LoginLazyRoute,
   RegisterLazyRoute: RegisterLazyRoute,
+  ResetPasswordLazyRoute: ResetPasswordLazyRoute,
   VerifyEmailLazyRoute: VerifyEmailLazyRoute,
   AssetsAssetIdRoute: AssetsAssetIdRoute,
   PaymentCallbackRoute: PaymentCallbackRoute,
