@@ -38,6 +38,16 @@ function AdminAssets() {
 
                   {/* Main Content */}
                   <main className="container mx-auto px-6 py-8">
+                        <div className="flex justify-between items-center mb-6">
+                              <h2 className="text-xl font-black uppercase tracking-tighter">Database_Registry</h2>
+                              <button
+                                    onClick={() => setShowCreateModal(true)}
+                                    className="px-6 py-2 bg-(--accent-primary) text-white font-black uppercase tracking-widest text-xs hover:bg-(--accent-secondary) transition-all shadow-lg shadow-(--accent-primary)/20"
+                              >
+                                    + ADD_NEW_ASSET
+                              </button>
+                        </div>
+
                         {/* Assets Table */}
                         <div className="glass border-2 border-(--border-default) overflow-hidden">
                               <table className="w-full">
