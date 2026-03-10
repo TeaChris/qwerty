@@ -16,20 +16,13 @@ export const getAllUsers = async (page = 1, limit = 20, search?: string) => {
 };
 
 export const suspendUser = async (id: string) => {
-      return api<{ status: string; message: string }>(`/admin/users/${id}/suspend`, {
-            method: 'PATCH'
-      });
+      return api<{ status: string; message: string }>(`/admin/users/${id}/suspend`, {}, 'PATCH');
 };
 
 export const unsuspendUser = async (id: string) => {
-      return api<{ status: string; message: string }>(`/admin/users/${id}/unsuspend`, {
-            method: 'PATCH'
-      });
+      return api<{ status: string; message: string }>(`/admin/users/${id}/unsuspend`, {}, 'PATCH');
 };
 
 export const updateUserRole = async (id: string, role: 'ADMIN' | 'USER') => {
-      return api<{ status: string; message: string }>(`/admin/users/${id}/role`, {
-            method: 'PATCH',
-            body: { role }
-      });
+      return api<{ status: string; message: string }>(`/admin/users/${id}/role`, { role }, 'PATCH');
 };
