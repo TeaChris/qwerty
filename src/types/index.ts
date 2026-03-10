@@ -9,3 +9,4 @@ export * from './sales';
 export * from './admin';
 export * from './assets';
 export * from './sale.types';
+export * from './category';
