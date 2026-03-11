@@ -2,7 +2,7 @@ import { createLazyFileRoute, Navigate } from '@tanstack/react-router';
 
 import { useAuthStore } from '../../stores';
 import { useAdminStats } from '../../hooks';
-import { AdminHeader, LoadingScreen } from '../../components';
+import { AdminHeader, LoadingScreen, SalesAnalytics } from '../../components';
 
 export const Route = createLazyFileRoute('/admin/dashboard')({
       component: AdminDashboard
@@ -63,6 +63,11 @@ function AdminDashboard() {
                                     <ActionButton label="New Flash Sale" icon="⚡" href="/admin/flash-sales" />
                                     <ActionButton label="View Stats" icon="📊" href="/admin/dashboard" />
                               </div>
+                        </div>
+
+                        {/* Analytics Section */}
+                        <div className="mb-8">
+                              <SalesAnalytics />
                         </div>
 
                         {/* Recent Activity */}
