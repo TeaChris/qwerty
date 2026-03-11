@@ -26,3 +26,18 @@ export const unsuspendUser = async (id: string) => {
 export const updateUserRole = async (id: string, role: 'ADMIN' | 'USER') => {
       return api<{ status: string; message: string }>(`/admin/users/${id}/role`, { role }, 'PATCH');
 };
+
+export const getAnalytics = async (period: 'daily' | 'weekly' | 'monthly' = 'daily') => {
+      return api<{
+            status: string;
+            data: {
+                  salesStats: Array<{ _id: string; revenue: number; sales: number }>;
+                  revenueByAsset: Array<{
+                        _id: string;
+                        totalRevenue: number;
+                        totalSales: number;
+                        assetDetails: { name: string; price: number };
+                  }>;
+            };
+      }>(`/admin/analytics?period=${period}`);
+};
