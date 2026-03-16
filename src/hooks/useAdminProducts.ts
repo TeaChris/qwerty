@@ -63,17 +63,16 @@ export const useAdminAssets = () => {
       };
 
       const handleDeleteAsset = async (id: string) => {
-            if (!confirm('Are you sure you want to delete this asset?')) return;
-
             const { error } = await deleteAsset(id);
 
             if (error) {
                   toast.error(error.message || 'Failed to delete asset');
-                  return;
+                  return false;
             }
 
             toast.success('Asset deleted successfully');
             await fetchAssets();
+            return true;
       };
 
       return {
