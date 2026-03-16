@@ -240,7 +240,7 @@ function CreateAssetModal({ onClose, onCreate, categories, onCategoryCreated }: 
       const formatImageUrl = (url: string) => {
             if (!url) return url;
             // Handle Unsplash page links
-            const unsplashMatch = url.match(/unsplash\.com\/photos\/(?:[\w-]+\-)?([\w-]+)/);
+            const unsplashMatch = url.match(/unsplash\.com\/photos\/(?:[\w-]+-)?([\w-]+)/);
             if (unsplashMatch && unsplashMatch[1]) {
                   return `https://images.unsplash.com/photo-${unsplashMatch[1]}?auto=format&fit=crop&w=800&q=80`;
             }
