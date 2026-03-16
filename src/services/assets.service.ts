@@ -29,7 +29,5 @@ export const updateAsset = async (id: string, data: Partial<CreateAssetRequest>)
 };
 
 export const deleteAsset = async (id: string) => {
-      return api<{ status: string; message: string }>(`/assets/${id}`, {
-            method: 'DELETE'
-      });
+      return api<{ status: string; message: string }>(`/assets/${id}`, undefined, 'DELETE');
 };
