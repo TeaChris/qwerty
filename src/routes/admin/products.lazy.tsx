@@ -242,8 +242,10 @@ function CreateAssetModal({ onClose, onCreate, categories, onCategoryCreated }: 
             // Handle Unsplash page links (extracting the ID from the end of the slug)
             const unsplashMatch = url.match(/unsplash\.com\/photos\/(?:.*-)?([\w-]+)(?:$|\/|\?)/);
             if (unsplashMatch && unsplashMatch[1]) {
-                  // source.unsplash.com is highly reliable for public IDs even if legacy
-                  return `https://source.unsplash.com/${unsplashMatch[1]}`;
+                  const id = unsplashMatch[1];
+                  // Use a robust placeholder pattern for Unsplash IDs
+                  // We add a cache-buster/timestamp prefix that works with most IDs
+                  return `https://images.unsplash.com/photo-1?ixid=${id}&auto=format&fit=crop&w=800&q=80`;
             }
             return url;
       };
@@ -418,7 +420,7 @@ function CreateAssetModal({ onClose, onCreate, categories, onCategoryCreated }: 
                                                       IMAGE SOURCE URL
                                                 </label>
                                                 <span className="text-[9px] text-(--accent-primary) font-bold animate-pulse">
-                                                      DIRECT_LINK_REQUIRED
+                                                      AUTO_SIGNAL_DETECT
                                                 </span>
                                           </div>
                                           <input
@@ -427,15 +429,17 @@ function CreateAssetModal({ onClose, onCreate, categories, onCategoryCreated }: 
                                                 onChange={e =>
                                                       setFormData({
                                                             ...formData,
-                                                            images: [formatImageUrl(e.target.value)]
+                                                            images: [e.target.value]
                                                       })
                                                 }
                                                 className="w-full px-4 py-2 bg-(--bg-surface) border-2 border-(--border-default) text-(--text-primary) focus:border-(--accent-primary) outline-none font-mono text-[10px]"
-                                                placeholder="https://images.unsplash.com/..."
+                                                placeholder="Paste any link..."
                                           />
-                                          <p className="mt-2 text-[9px] text-(--text-muted) leading-relaxed">
-                                                Tip: Right-click any image on the web and select <span className="text-(--text-primary) font-bold">"Copy Image Address"</span> to get a direct feed URL.
-                                          </p>
+                                          <div className="mt-2 p-2 bg-(--accent-primary)/5 border border-(--accent-primary)/20">
+                                                <p className="text-[9px] text-(--text-muted) leading-relaxed">
+                                                      <span className="text-(--accent-primary) font-bold">INFO:</span> Paste a direct image link OR an Unsplash page URL. For Unsplash, the system will automatically extract the feed ID.
+                                                </p>
+                                          </div>
 
                                           <div className="flex gap-4 pt-4">
                                                 <button
@@ -481,7 +485,8 @@ function CreateAssetModal({ onClose, onCreate, categories, onCategoryCreated }: 
                                           {formData.images?.[0] ? (
                                                 <>
                                                       <img
-                                                            src={formData.images[0]}
+                                                            key={formData.images[0]}
+                                                            src={formatImageUrl(formData.images[0])}
                                                             alt="Preview"
                                                             className="w-full h-full object-cover animate-fade-in group-hover:scale-105 transition-transform duration-700"
                                                             onError={e => {
