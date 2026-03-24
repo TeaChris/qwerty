@@ -5,6 +5,7 @@ import { routeTree } from './routeTree.gen';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { ErrorBoundary } from './components/ui/error.boundary';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { ReloadPrompt } from './components/reload.prompt';
 
 import './index.css';
 
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')!).render(
             <ErrorBoundary>
                   <RouterProvider router={router} />
                   <SpeedInsights framework="react" />
+                  <ReloadPrompt />
             </ErrorBoundary>
       </StrictMode>
 );
